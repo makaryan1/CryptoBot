@@ -9,9 +9,11 @@ import QuickDeposit from "@/components/dashboard/quick-deposit";
 import KycVerification from "@/components/dashboard/kyc-verification";
 import RecentTransactions from "@/components/dashboard/recent-transactions";
 import ReferralProgram from "@/components/dashboard/referral-program";
+import { useI18n } from "@/hooks/use-i18n";
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { t } = useI18n();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const toggleSidebar = () => {
@@ -19,6 +21,10 @@ export default function Dashboard() {
   };
   
   if (!user) return null;
+
+  const welcomeMessage = t('dashboard.welcomeBack', { 
+    name: user.fullName || user.email.split('@')[0] 
+  });
   
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
@@ -27,8 +33,8 @@ export default function Dashboard() {
       <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
         <Header 
           toggleSidebar={toggleSidebar} 
-          title="Dashboard" 
-          subtitle={`Welcome back, ${user.fullName || user.email.split('@')[0]}!`} 
+          title={t('sidebar.dashboard')} 
+          subtitle={welcomeMessage} 
         />
         
         <AccountSummary />
