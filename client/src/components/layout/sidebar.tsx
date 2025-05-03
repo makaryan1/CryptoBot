@@ -109,7 +109,7 @@ export default function Sidebar() {
               <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-white shadow-md group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-200">
                 <Bot className="h-5 w-5" />
               </div>
-              <span className="font-bold text-xl gradient-heading">CryptoBot</span>
+              <span className="font-bold text-xl gradient-heading">TradeMaster AI</span>
             </div>
           </Link>
           <Button 
@@ -139,10 +139,10 @@ export default function Sidebar() {
               />
               <NavItem 
                 icon={<Bot className="h-4 w-4" />}
-                label={t('sidebar.bots')}
+                label={t('sidebar.tradingBots')}
                 href="/bots" 
                 active={location.startsWith("/bot")}
-                badge={user?.id ? "0" : ""}
+                badge={user?.id ? "8" : ""}
               />
               <NavItem 
                 icon={<Wallet className="h-4 w-4" />}
@@ -176,20 +176,20 @@ export default function Sidebar() {
             <ul className="space-y-1">
               <NavItem 
                 icon={<User className="h-4 w-4" />}
-                label={t('sidebar.profile')}
+                label={t('sidebar.profileSettings')}
                 href="/profile" 
                 active={location === "/profile"}
               />
               <NavItem 
                 icon={<Shield className="h-4 w-4" />}
-                label={t('sidebar.kyc')}
+                label={t('sidebar.verification')}
                 href="/kyc" 
                 active={location === "/kyc"}
-                highlight={undefined}
+                highlight="warning"
               />
               <NavItem 
                 icon={<Settings className="h-4 w-4" />}
-                label={t('sidebar.settings')}
+                label={t('sidebar.security')}
                 href="/profile" 
                 active={location === "/settings"}
               />
@@ -206,13 +206,13 @@ export default function Sidebar() {
             <ul className="space-y-1">
               <NavItem 
                 icon={<HelpCircle className="h-4 w-4" />}
-                label={t('sidebar.help')}
+                label={t('sidebar.faq')}
                 href="/support" 
                 active={location === "/help"}
               />
               <NavItem 
                 icon={<MessagesSquare className="h-4 w-4" />}
-                label={t('sidebar.contact')}
+                label={t('sidebar.supportChat')}
                 href="/support" 
                 active={location === "/support"}
               />
