@@ -139,6 +139,7 @@ const defaultTranslations: Translations = {
     'bots.maxDuration': 'Maximum Duration',
     'bots.maxDurationDescription': 'Automatically stop the bot after this number of days',
     'bots.days': 'days',
+    'bots.availableOption': 'Available',
   },
   ru: {
     // Common
@@ -272,7 +273,7 @@ const defaultTranslations: Translations = {
     'bots.maxDuration': 'Максимальная длительность',
     'bots.maxDurationDescription': 'Автоматически останавливать бота после указанного количества дней',
     'bots.days': 'дней',
-    'bots.available': 'Доступно',
+    'bots.availableOption': 'Доступно',
   }
 };
 

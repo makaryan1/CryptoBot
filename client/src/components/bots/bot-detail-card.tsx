@@ -316,15 +316,15 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-sm text-neutral-600"><T keyName="bots.stopLoss" /></span>
-                      <span className="text-sm font-medium text-primary"><T keyName="bots.available" /></span>
+                      <span className="text-sm font-medium text-primary"><T keyName="bots.availableOption" /></span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-neutral-600"><T keyName="bots.takeProfit" /></span>
-                      <span className="text-sm font-medium text-primary"><T keyName="bots.available" /></span>
+                      <span className="text-sm font-medium text-primary"><T keyName="bots.availableOption" /></span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-neutral-600"><T keyName="bots.maxDuration" /></span>
-                      <span className="text-sm font-medium text-primary"><T keyName="bots.available" /></span>
+                      <span className="text-sm font-medium text-primary"><T keyName="bots.availableOption" /></span>
                     </div>
                     <p className="text-xs text-neutral-500 mt-2">
                       <T keyName="bots.availableAfterLaunch" />
@@ -517,15 +517,15 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-sm text-neutral-600"><T keyName="bots.stopLoss" /></span>
-                        <span className="text-sm font-medium"><T keyName="bots.available" /></span>
+                        <span className="text-sm font-medium"><T keyName="bots.availableOption" /></span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm text-neutral-600"><T keyName="bots.takeProfit" /></span>
-                        <span className="text-sm font-medium"><T keyName="bots.available" /></span>
+                        <span className="text-sm font-medium"><T keyName="bots.availableOption" /></span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm text-neutral-600"><T keyName="bots.maxDuration" /></span>
-                        <span className="text-sm font-medium"><T keyName="bots.available" /></span>
+                        <span className="text-sm font-medium"><T keyName="bots.availableOption" /></span>
                       </div>
                       <p className="text-xs text-neutral-500 mt-2">
                         <T keyName="bots.availableAfterLaunch" />
