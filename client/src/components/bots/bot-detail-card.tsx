@@ -130,7 +130,7 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
           <div className="grid gap-6 py-4">
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-md bg-${bot.iconBg} flex items-center justify-center text-${bot.iconColor}`}>
+                <div className={`w-10 h-10 rounded-md bg-${bot.iconBg || 'slate-100'} flex items-center justify-center text-${bot.iconColor || 'slate-900'}`}>
                   <i className={bot.icon}></i>
                 </div>
                 <div>
@@ -224,7 +224,7 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
         <CardContent className="p-6">
           <div className="mb-6">
             <div className="flex items-center mb-4">
-              <div className={`w-12 h-12 rounded-md bg-${bot.iconBg} flex items-center justify-center text-${bot.iconColor} mr-4`}>
+              <div className={`w-12 h-12 rounded-md bg-${bot.iconBg || 'slate-100'} flex items-center justify-center text-${bot.iconColor || 'slate-900'} mr-4`}>
                 <i className={`${bot.icon} text-xl`}></i>
               </div>
               <div>

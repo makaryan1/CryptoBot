@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { BotDetailCard } from "@/components/bots/bot-detail-card";
 import { T } from "@/lib/i18n";
+import { Bot } from "@shared/schema";
 
 export default function BotDetailsPage() {
   const [location, setLocation] = useLocation();
@@ -14,7 +15,7 @@ export default function BotDetailsPage() {
   const botId = Number(params.id);
   
   const { availableBots, launchBot, isLoading } = useBots();
-  const [bot, setBot] = useState(null);
+  const [bot, setBot] = useState<Bot | null>(null);
   
   useEffect(() => {
     if (!isLoading && availableBots.length > 0) {

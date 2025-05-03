@@ -69,6 +69,8 @@ export const bots = pgTable("bots", {
   riskLevel: text("risk_level").notNull(),
   enabled: boolean("enabled").default(true),
   icon: text("icon").notNull(),
+  iconBg: text("icon_bg").default("slate-100"),
+  iconColor: text("icon_color").default("slate-900"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -170,6 +172,8 @@ export const insertBotSchema = createInsertSchema(bots).pick({
   profitRange: true,
   riskLevel: true,
   icon: true,
+  iconBg: true,
+  iconColor: true,
 });
 
 export const insertUserBotSchema = createInsertSchema(userBots).pick({
