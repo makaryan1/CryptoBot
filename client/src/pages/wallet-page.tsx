@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 import { useWallet } from "@/hooks/use-wallet";
@@ -16,6 +16,10 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { TokenSelector } from "@/components/wallet/token-selector";
+import { NetworkSelector } from "@/components/wallet/network-selector";
+import { getTokenById } from "@shared/tokens";
+import { T } from "@/lib/i18n";
 
 const withdrawalSchema = z.object({
   currency: z.string().min(1, { message: "Please select a currency" }),
@@ -29,6 +33,8 @@ export default function WalletPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { wallets, withdraw, supportedCurrencies, isLoading } = useWallet();
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [selectedTokenId, setSelectedTokenId] = useState("");
+  const [selectedNetworkId, setSelectedNetworkId] = useState("");
   
   const form = useForm<WithdrawalFormValues>({
     resolver: zodResolver(withdrawalSchema),
@@ -43,14 +49,33 @@ export default function WalletPage() {
     setIsSidebarOpen(!isSidebarOpen);
   };
   
+  // Обновить currency в форме при изменении выбора токена и сети
+  useEffect(() => {
+    if (selectedTokenId && selectedNetworkId) {
+      const token = getTokenById(selectedTokenId);
+      if (token) {
+        // Установить currency в формате "SYMBOL (NETWORK)"
+        form.setValue("currency", `${token.symbol} (${selectedNetworkId.toUpperCase()})`);
+      }
+    }
+  }, [selectedTokenId, selectedNetworkId, form]);
+  
   const onSubmit = (data: WithdrawalFormValues) => {
+    if (!selectedTokenId || !selectedNetworkId) {
+      return;
+    }
+    
     withdraw({
       currency: data.currency,
       amount: data.amount,
       address: data.address,
+      network: selectedNetworkId,
+      tokenId: selectedTokenId
     });
     setIsWithdrawOpen(false);
     form.reset();
+    setSelectedTokenId("");
+    setSelectedNetworkId("");
   };
   
   return (
