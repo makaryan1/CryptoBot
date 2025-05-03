@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Copy, CheckCircle2, ExternalLink } from "lucide-react";
 import { type Token, type Network } from "@shared/tokens";
+import { QRCodeSVG } from "qrcode.react";
 import { T } from "@/lib/i18n";
 
 interface QRCodeAddressProps {
@@ -14,17 +15,6 @@ interface QRCodeAddressProps {
 
 export function QRCodeAddress({ token, network, address, walletId }: QRCodeAddressProps) {
   const [copied, setCopied] = useState(false);
-  const [qrCodeUrl, setQrCodeUrl] = useState('');
-  
-  useEffect(() => {
-    // Создаем QR-код с помощью Google Chart API
-    // Это простое решение без зависимостей
-    if (address) {
-      const encodedAddress = encodeURIComponent(address);
-      // Размер QR-кода 200x200px, уровень коррекции ошибок: L (low)
-      setQrCodeUrl(`https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodedAddress}&chld=L|0`);
-    }
-  }, [address]);
   
   const copyToClipboard = () => {
     if (address) {
@@ -77,11 +67,14 @@ export function QRCodeAddress({ token, network, address, walletId }: QRCodeAddre
         </div>
         
         <div className="bg-neutral-50 p-4 rounded-lg mb-4 w-auto">
-          {qrCodeUrl ? (
-            <img 
-              src={qrCodeUrl} 
-              alt={`QR Code for ${address}`} 
+          {address ? (
+            <QRCodeSVG 
+              value={address}
+              size={192}
+              level="L"
               className="w-48 h-48"
+              bgColor="#fafafa"
+              fgColor="#000000"
             />
           ) : (
             <div className="w-48 h-48 flex items-center justify-center bg-neutral-100 rounded">
