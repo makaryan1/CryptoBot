@@ -126,13 +126,13 @@ export default function ActiveBots() {
                 
                 <div className="flex items-center justify-between">
                   <div className="text-xs font-medium">
-                    <span className="text-secondary">+{bot.profitPercentage.toFixed(2)}%</span> profit
+                    <span className="text-secondary">+{bot.profitPercentage.toFixed(2)}%</span> {t('bots.profit')}
                   </div>
                   <button 
                     className="text-neutral-400 hover:text-error text-sm font-medium"
                     onClick={() => handleStopBot(bot.id)}
                   >
-                    Stop Bot
+                    {t('bots.stop')}
                   </button>
                 </div>
               </div>

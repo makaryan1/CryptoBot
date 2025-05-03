@@ -1,10 +1,12 @@
 import { Link } from "wouter";
 import { useWallet } from "@/hooks/use-wallet";
+import { useI18n } from "@/hooks/use-i18n";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 export default function RecentTransactions() {
+  const { t } = useI18n();
   const { transactions, isLoading } = useWallet();
   const { toast } = useToast();
   
@@ -46,12 +48,10 @@ export default function RecentTransactions() {
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold">Recent Transactions</h2>
-        <Link href="/transactions">
-          <a className="text-primary text-sm font-medium flex items-center hover:underline">
-            View All
-            <i className="ri-arrow-right-line ml-1 text-xs"></i>
-          </a>
+        <h2 className="text-lg font-bold">{t('wallet.transactionHistory')}</h2>
+        <Link href="/transactions" className="text-primary text-sm font-medium flex items-center hover:underline">
+          {t('common.viewAll')}
+          <i className="ri-arrow-right-line ml-1 text-xs"></i>
         </Link>
       </div>
       
