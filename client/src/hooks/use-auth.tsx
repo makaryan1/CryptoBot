@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterData) => {
-      const { confirmPassword, acceptTerms, ...userData } = data;
+      const { acceptTerms, ...userData } = data; // Оставляем confirmPassword для проверки на сервере
       const res = await apiRequest("POST", "/api/register", userData);
       return await res.json();
     },
