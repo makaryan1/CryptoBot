@@ -1,5 +1,6 @@
 import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { relations } from "drizzle-orm";
 import { z } from "zod";
 
 // User schema
@@ -132,6 +133,85 @@ export const settings = pgTable("settings", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Relations
+export const usersRelations = relations(users, ({ many, one }) => ({
+  wallets: many(wallets),
+  transactions: many(transactions),
+  userBots: many(userBots),
+  supportTickets: many(supportTickets),
+  referrer: one(users, {
+    fields: [users.referrerId],
+    references: [users.id],
+  }),
+  referrals: many(users, {
+    relationName: "referrer",
+  }),
+  kyc: many(kyc),
+  notifications: many(notifications),
+}));
+
+export const walletsRelations = relations(wallets, ({ one }) => ({
+  user: one(users, {
+    fields: [wallets.userId],
+    references: [users.id],
+  }),
+}));
+
+export const transactionsRelations = relations(transactions, ({ one }) => ({
+  user: one(users, {
+    fields: [transactions.userId],
+    references: [users.id],
+  }),
+}));
+
+export const botsRelations = relations(bots, ({ many }) => ({
+  userBots: many(userBots),
+}));
+
+export const userBotsRelations = relations(userBots, ({ one }) => ({
+  user: one(users, {
+    fields: [userBots.userId],
+    references: [users.id],
+  }),
+  bot: one(bots, {
+    fields: [userBots.botId],
+    references: [bots.id],
+  }),
+}));
+
+export const supportTicketsRelations = relations(supportTickets, ({ one, many }) => ({
+  user: one(users, {
+    fields: [supportTickets.userId],
+    references: [users.id],
+  }),
+  messages: many(supportMessages),
+}));
+
+export const supportMessagesRelations = relations(supportMessages, ({ one }) => ({
+  ticket: one(supportTickets, {
+    fields: [supportMessages.ticketId],
+    references: [supportTickets.id],
+  }),
+  user: one(users, {
+    fields: [supportMessages.userId],
+    references: [users.id],
+  }),
+}));
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  user: one(users, {
+    fields: [notifications.userId],
+    references: [users.id],
+  }),
+}));
+
+export const kycRelations = relations(kyc, ({ one }) => ({
+  user: one(users, {
+    fields: [kyc.userId],
+    references: [users.id],
+  }),
+}));
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   email: true,
@@ -156,6 +236,7 @@ export const insertWalletSchema = createInsertSchema(wallets).pick({
   userId: true,
   currency: true,
   address: true,
+  balance: true,
 });
 
 export const insertTransactionSchema = createInsertSchema(transactions).pick({
@@ -163,6 +244,7 @@ export const insertTransactionSchema = createInsertSchema(transactions).pick({
   type: true,
   currency: true,
   amount: true,
+  status: true,
   txHash: true,
 });
 
@@ -182,6 +264,7 @@ export const insertUserBotSchema = createInsertSchema(userBots).pick({
   initialInvestment: true,
   currentValue: true,
   currency: true,
+  status: true,
 });
 
 export const insertSupportTicketSchema = createInsertSchema(supportTickets).pick({
