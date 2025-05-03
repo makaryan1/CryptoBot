@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { storage } from "../storage";
 import { insertExchangeApiKeySchema } from "@shared/schema";
 import * as crypto from "crypto";
@@ -6,7 +6,7 @@ import * as crypto from "crypto";
 const router = Router();
 
 // Middleware to ensure user is authenticated
-const ensureAuthenticated = (req, res, next) => {
+const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -14,8 +14,12 @@ const ensureAuthenticated = (req, res, next) => {
 };
 
 // GET /api/exchange/api-keys - Get all API keys for current user
-router.get("/api-keys", ensureAuthenticated, async (req, res) => {
+router.get("/api-keys", ensureAuthenticated, async (req: Request, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
     // Получение всех API ключей пользователя
     const keys = await storage.getExchangeApiKeysByUserId(req.user.id);
     
@@ -40,8 +44,12 @@ router.get("/api-keys", ensureAuthenticated, async (req, res) => {
 });
 
 // POST /api/exchange/api-keys - Create a new API key
-router.post("/api-keys", ensureAuthenticated, async (req, res) => {
+router.post("/api-keys", ensureAuthenticated, async (req: Request, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
     // Валидируем входные данные с использованием Zod схемы
     const validatedData = insertExchangeApiKeySchema.parse({
       ...req.body,
@@ -67,7 +75,7 @@ router.post("/api-keys", ensureAuthenticated, async (req, res) => {
     };
     
     return res.status(201).json(safeKey);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating API key:", error);
     if (error.name === "ZodError") {
       return res.status(400).json({ error: "Invalid API key data", details: error.errors });
