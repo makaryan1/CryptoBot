@@ -119,7 +119,7 @@ export class DatabaseStorage implements IStorage {
   
   async updateWallet(id: number, data: Partial<Wallet>): Promise<Wallet> {
     const [updatedWallet] = await db.update(wallets)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(wallets.id, id))
       .returning();
       
@@ -151,7 +151,7 @@ export class DatabaseStorage implements IStorage {
   
   async updateTransaction(id: number, data: Partial<Transaction>): Promise<Transaction> {
     const [updatedTx] = await db.update(transactions)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(transactions.id, id))
       .returning();
       
@@ -192,7 +192,7 @@ export class DatabaseStorage implements IStorage {
   
   async updateBot(id: number, data: Partial<Bot>): Promise<Bot> {
     const [updatedBot] = await db.update(bots)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(bots.id, id))
       .returning();
       
@@ -226,14 +226,14 @@ export class DatabaseStorage implements IStorage {
     const [newUserBot] = await db.insert(userBots).values({
       ...userBotData,
       status: "active", // Default status
-      startedAt: new Date().toISOString()
+      startedAt: new Date()
     }).returning();
     return newUserBot;
   }
   
   async updateUserBot(id: number, data: Partial<UserBot>): Promise<UserBot> {
     const [updatedUserBot] = await db.update(userBots)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(userBots.id, id))
       .returning();
       
@@ -273,7 +273,7 @@ export class DatabaseStorage implements IStorage {
   
   async updateSupportTicket(id: number, data: Partial<SupportTicket>): Promise<SupportTicket> {
     const [updatedTicket] = await db.update(supportTickets)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(supportTickets.id, id))
       .returning();
       
@@ -327,7 +327,7 @@ export class DatabaseStorage implements IStorage {
   
   async updateNotification(id: number, data: Partial<Notification>): Promise<Notification> {
     const [updatedNotification] = await db.update(notifications)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(notifications.id, id))
       .returning();
       
@@ -358,7 +358,7 @@ export class DatabaseStorage implements IStorage {
     
     // Update existing settings
     const [updatedSettings] = await db.update(settings)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(settings.id, 1))
       .returning();
       
