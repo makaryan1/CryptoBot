@@ -139,11 +139,11 @@ export default function WalletPage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="font-medium">{wallet.balance.toFixed(
+                            <p className="font-medium">{(wallet.balance || 0).toFixed(
                               wallet.currency === 'BTC' || wallet.currency === 'ETH' ? 8 : 2
                             )}</p>
                             <p className="text-sm text-neutral-400">
-                              ≈ ${(wallet.balance * (
+                              ≈ ${((wallet.balance || 0) * (
                                 wallet.currency === 'BTC' ? 45000 : 
                                 wallet.currency === 'ETH' ? 3000 : 1
                               )).toFixed(2)}
@@ -186,24 +186,33 @@ export default function WalletPage() {
                         name="currency"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Select Currency</FormLabel>
-                            <Select 
-                              onValueChange={field.onChange} 
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select a currency" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {supportedCurrencies.map((currency) => (
-                                  <SelectItem key={currency} value={currency}>
-                                    {currency}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                            <FormLabel><T keyName="wallet.selectToken" /></FormLabel>
+                            <FormControl>
+                              <div className="space-y-4">
+                                <TokenSelector
+                                  value={selectedTokenId}
+                                  onChange={setSelectedTokenId}
+                                  popularOnly={false}
+                                />
+                                
+                                {selectedTokenId && (
+                                  <div className="mt-3">
+                                    <Label className="mb-2 block"><T keyName="wallet.selectNetwork" /></Label>
+                                    <NetworkSelector
+                                      tokenId={selectedTokenId}
+                                      value={selectedNetworkId}
+                                      onChange={setSelectedNetworkId}
+                                    />
+                                  </div>
+                                )}
+                                
+                                {/* Скрытое поле для хранения полного значения валюты */}
+                                <input 
+                                  type="hidden" 
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}

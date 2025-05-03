@@ -55,16 +55,22 @@ export function useWallet() {
     mutationFn: async ({ 
       currency, 
       amount, 
-      address 
+      address,
+      network,
+      tokenId
     }: { 
       currency: string; 
       amount: number; 
-      address: string; 
+      address: string;
+      network?: string;
+      tokenId?: string;
     }) => {
       const res = await apiRequest("POST", "/api/wallets/withdraw", {
         currency,
         amount,
-        address
+        address,
+        network,
+        tokenId
       });
       return res.json();
     },
@@ -88,7 +94,7 @@ export function useWallet() {
   // Calculate total balance
   const calculateTotalBalance = (): number => {
     if (!wallets) return 0;
-    return wallets.reduce((total, wallet) => total + wallet.balance, 0);
+    return wallets.reduce((total, wallet) => total + (wallet.balance || 0), 0);
   };
   
   // Calculate total profit based on transactions
