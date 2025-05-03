@@ -163,8 +163,19 @@ export class DatabaseStorage implements IStorage {
   }
   
   async getBot(id: number): Promise<Bot | undefined> {
-    const [bot] = await db.select().from(bots).where(eq(bots.id, id));
-    return bot;
+    // Проверяем, что id - это действительное число
+    if (isNaN(id) || id <= 0) {
+      console.error(`Invalid bot id: ${id}`);
+      return undefined;
+    }
+    
+    try {
+      const [bot] = await db.select().from(bots).where(eq(bots.id, id));
+      return bot;
+    } catch (error) {
+      console.error(`Error getting bot with id ${id}:`, error);
+      return undefined;
+    }
   }
   
   async getAllBots(): Promise<Bot[]> {
@@ -368,60 +379,60 @@ export class DatabaseStorage implements IStorage {
     // Create initial bot data
     const initialBots: InsertBot[] = [
       {
-        name: "DCA Master",
-        description: "Dollar-cost averaging strategy that buys small amounts at regular intervals to reduce the impact of volatility.",
-        profitRange: "5-15%",
+        name: "RSI SwingBot",
+        description: "Покупает актив, когда RSI падает ниже 30, и продаёт, когда RSI поднимается выше 70. Работает на свечах 1H или 4H.",
+        profitRange: "3-6%",
         riskLevel: "low",
-        icon: "chart-line",
+        icon: "bar-chart",
       },
       {
-        name: "Trend Rider",
-        description: "Follows market trends and makes trades based on momentum indicators for medium-term gains.",
-        profitRange: "10-25%",
+        name: "TrendFlow (EMA Cross)",
+        description: "Работает по стратегии 'пересечения скользящих средних': покупает при пересечении EMA 50 и EMA 200 вверх, продаёт при пересечении вниз.",
+        profitRange: "5-10%",
         riskLevel: "medium",
         icon: "trending-up",
       },
       {
-        name: "Flash Trader",
-        description: "High-frequency trading bot that capitalizes on small price movements with rapid trades.",
-        profitRange: "15-40%",
-        riskLevel: "high",
-        icon: "zap",
-      },
-      {
-        name: "Arbitrage Hunter",
-        description: "Exploits price differences between exchanges to generate consistent profits with minimal risk.",
-        profitRange: "3-10%",
-        riskLevel: "very-low",
-        icon: "shuffle",
-      },
-      {
-        name: "Grid Maestro",
-        description: "Places a grid of buy and sell orders to profit from price oscillations in sideways markets.",
-        profitRange: "8-20%",
+        name: "AI SmartGrid",
+        description: "Сеточная торговля в диапазоне, AI-модуль помогает настраивать шаг сетки и спред.",
+        profitRange: "6-12%",
         riskLevel: "medium",
         icon: "grid",
       },
       {
-        name: "HODL Enhancer",
-        description: "Long-term strategy that holds core positions while enhancing returns through strategic rebalancing.",
-        profitRange: "7-18%",
-        riskLevel: "low",
-        icon: "inbox",
+        name: "Scalper Pro",
+        description: "Работает на 1-минутных свечах. Сканирует рынок на микро-движения. Часто открывает и закрывает сделки в течение 1–5 минут.",
+        profitRange: "10-20%",
+        riskLevel: "high",
+        icon: "zap",
       },
       {
-        name: "Volatility Harvester",
-        description: "Thrives during market turbulence by capitalizing on extreme price movements in either direction.",
-        profitRange: "20-50%",
-        riskLevel: "very-high",
+        name: "Arbitrage Delta",
+        description: "Сравнивает цены одного актива на двух биржах (например, Binance и KuCoin) и зарабатывает на разнице.",
+        profitRange: "1-3%",
+        riskLevel: "very-low",
+        icon: "shuffle",
+      },
+      {
+        name: "News Impact Bot",
+        description: "Реагирует на новости и твиты. Например, Илон Маск написал о DOGE → бот покупает DOGE.",
+        profitRange: "8-18%",
+        riskLevel: "high",
+        icon: "rss",
+      },
+      {
+        name: "Breakout Hunter",
+        description: "Обнаруживает боковики и устанавливает отложенные ордера на пробой вверх/вниз.",
+        profitRange: "10-20%",
+        riskLevel: "high",
         icon: "activity",
       },
       {
-        name: "AI Predictor",
-        description: "Uses machine learning algorithms to predict market movements based on historical data patterns.",
-        profitRange: "12-35%",
-        riskLevel: "high",
-        icon: "cpu",
+        name: "Grid Auto-Tuner",
+        description: "Простой бот, который сам настраивает сетку исходя из волатильности.",
+        profitRange: "3-5%",
+        riskLevel: "low",
+        icon: "sliders",
       }
     ];
     
