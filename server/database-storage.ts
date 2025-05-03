@@ -370,6 +370,34 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(users).where(eq(users.referrerId, referrerId));
   }
   
+  // Exchange API Key operations
+  async getExchangeApiKey(id: number): Promise<ExchangeApiKey | undefined> {
+    const [apiKey] = await db.select().from(exchangeApiKeys).where(eq(exchangeApiKeys.id, id));
+    return apiKey;
+  }
+  
+  async getExchangeApiKeysByUserId(userId: number): Promise<ExchangeApiKey[]> {
+    return await db.select().from(exchangeApiKeys)
+      .where(eq(exchangeApiKeys.userId, userId))
+      .orderBy(desc(exchangeApiKeys.createdAt));
+  }
+  
+  async createExchangeApiKey(apiKeyData: InsertExchangeApiKey): Promise<ExchangeApiKey> {
+    const [newApiKey] = await db.insert(exchangeApiKeys).values({
+      ...apiKeyData,
+      permissions: [] // Default permissions is empty array
+    }).returning();
+    return newApiKey;
+  }
+  
+  async deleteExchangeApiKey(id: number): Promise<void> {
+    const result = await db.delete(exchangeApiKeys).where(eq(exchangeApiKeys.id, id)).returning({id: exchangeApiKeys.id});
+    
+    if (result.length === 0) {
+      throw new Error(`API Key with ID ${id} not found`);
+    }
+  }
+  
   private async initializeBots() {
     // Check if we already have bots
     const existingBots = await this.getAllBots();

@@ -17,31 +17,31 @@ const SUPPORTED_EXCHANGES = [
   { 
     id: "binance", 
     name: "Binance", 
-    logo: "https://cryptologos.cc/logos/binance-coin-bnb-logo.svg?v=026",
+    logo: "/exchanges/binance.svg",
     color: "yellow-200" 
   },
   { 
     id: "bybit", 
     name: "Bybit", 
-    logo: "",
+    logo: "/exchanges/bybit.svg",
     color: "blue-200" 
   },
   { 
     id: "okx", 
     name: "OKX", 
-    logo: "",
+    logo: "/exchanges/okx.svg",
     color: "green-200" 
   },
   { 
     id: "kucoin", 
     name: "KuCoin", 
-    logo: "https://cryptologos.cc/logos/kucoin-kcs-logo.svg?v=026",
+    logo: "/exchanges/kucoin.svg",
     color: "green-200" 
   },
   { 
     id: "huobi", 
     name: "Huobi", 
-    logo: "https://cryptologos.cc/logos/huobi-token-ht-logo.svg?v=026",
+    logo: "/exchanges/huobi.svg",
     color: "teal-200" 
   }
 ];
