@@ -223,6 +223,7 @@ const defaultTranslations: Translations = {
     'common.delete': 'Удалить',
     'common.yes': 'Да',
     'common.no': 'Нет',
+    'common.viewAll': 'Показать все',
     
     // Auth
     'auth.login': 'Войти',

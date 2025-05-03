@@ -42,8 +42,8 @@ export default function ActiveBots() {
                   
                   <div className="mb-3">
                     <div className="flex justify-between text-xs text-neutral-400 mb-1">
-                      <span>Initial Investment</span>
-                      <span>Current Value</span>
+                      <span>{t('bots.initialInvestment')}</span>
+                      <span>{t('bots.currentValue')}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <Skeleton className="h-4 w-16" />
@@ -69,11 +69,11 @@ export default function ActiveBots() {
               <div className="mx-auto w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary mb-3">
                 <i className="ri-robot-line text-xl"></i>
               </div>
-              <h3 className="text-lg font-medium mb-2">No Active Bots</h3>
-              <p className="text-neutral-400 mb-4">You haven't started any trading bots yet.</p>
+              <h3 className="text-lg font-medium mb-2">{t('bots.noActiveBots')}</h3>
+              <p className="text-neutral-400 mb-4">{t('bots.noActiveBotsDescription')}</p>
               <Button>
                 <i className="ri-robot-line mr-2"></i>
-                Launch Your First Bot
+                {t('bots.launch')}
               </Button>
             </div>
           </CardContent>
@@ -98,15 +98,15 @@ export default function ActiveBots() {
                   <div className="flex items-center">
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>
-                      Active
+                      {t('bots.active')}
                     </span>
                   </div>
                 </div>
                 
                 <div className="mb-3">
                   <div className="flex justify-between text-xs text-neutral-400 mb-1">
-                    <span>Initial Investment</span>
-                    <span>Current Value</span>
+                    <span>{t('bots.initialInvestment')}</span>
+                    <span>{t('bots.currentValue')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>${bot.initialInvestment.toFixed(2)}</span>
