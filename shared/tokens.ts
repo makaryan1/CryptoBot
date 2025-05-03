@@ -833,9 +833,867 @@ export const tokens: Token[] = [
     isPopular: false,
   },
   
-  // Это примерно 25-30 токенов из 100+
-  // Для полного списка из 100+ нужно добавить примерно еще 70-80 токенов
-  // Здесь представлены наиболее популярные
+  // DEX и Governance Токены
+  {
+    id: 'cake',
+    symbol: 'CAKE',
+    name: 'PancakeSwap',
+    decimals: 18,
+    logoUrl: '/assets/tokens/cake.png',
+    networks: {
+      bsc: {
+        contractAddress: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
+        isNative: false,
+      }
+    },
+    type: 'defi',
+    isPopular: false,
+  },
+  {
+    id: 'aave',
+    symbol: 'AAVE',
+    name: 'Aave',
+    decimals: 18,
+    logoUrl: '/assets/tokens/aave.png',
+    networks: {
+      eth: {
+        contractAddress: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
+        isNative: false,
+      },
+      polygon: {
+        contractAddress: '0xD6DF932A45C0f255f85145f286eA0b292B21C90B',
+        isNative: false,
+      },
+      avalanche: {
+        contractAddress: '0x63a72806098Bd3D9520cC43356dD78afe5D386D9',
+        isNative: false,
+      }
+    },
+    type: 'defi',
+    isPopular: false,
+  },
+  {
+    id: 'comp',
+    symbol: 'COMP',
+    name: 'Compound',
+    decimals: 18,
+    logoUrl: '/assets/tokens/comp.png',
+    networks: {
+      eth: {
+        contractAddress: '0xc00e94Cb662C3520282E6f5717214004A7f26888',
+        isNative: false,
+      }
+    },
+    type: 'governance',
+    isPopular: false,
+  },
+  {
+    id: 'crv',
+    symbol: 'CRV',
+    name: 'Curve DAO Token',
+    decimals: 18,
+    logoUrl: '/assets/tokens/crv.png',
+    networks: {
+      eth: {
+        contractAddress: '0xD533a949740bb3306d119CC777fa900bA034cd52',
+        isNative: false,
+      }
+    },
+    type: 'governance',
+    isPopular: false,
+  },
+  {
+    id: 'sushi',
+    symbol: 'SUSHI',
+    name: 'SushiSwap',
+    decimals: 18,
+    logoUrl: '/assets/tokens/sushi.png',
+    networks: {
+      eth: {
+        contractAddress: '0x6B3595068778DD592e39A122f4f5a5cF09C90fE2',
+        isNative: false,
+      }
+    },
+    type: 'defi',
+    isPopular: false,
+  },
+  
+  // Layer 2 и Scaling Solutions
+  {
+    id: 'imx',
+    symbol: 'IMX',
+    name: 'Immutable X',
+    decimals: 18,
+    logoUrl: '/assets/tokens/imx.png',
+    networks: {
+      eth: {
+        contractAddress: '0xF57e7e7C23978C3cAEC3C3548E3D615c346e79fF',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'arb',
+    symbol: 'ARB',
+    name: 'Arbitrum',
+    decimals: 18,
+    logoUrl: '/assets/tokens/arb.png',
+    networks: {
+      arbitrum: {
+        contractAddress: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+        isNative: false,
+      },
+      eth: {
+        contractAddress: '0xB50721BCf8d664c30412Cfbc6cf7a15145234ad1',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'op',
+    symbol: 'OP',
+    name: 'Optimism',
+    decimals: 18,
+    logoUrl: '/assets/tokens/op.png',
+    networks: {
+      optimism: {
+        contractAddress: '0x4200000000000000000000000000000000000042',
+        isNative: false,
+      },
+      eth: {
+        contractAddress: '0x4200000000000000000000000000000000000042',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  
+  // Layer 1 Blockchains
+  {
+    id: 'atom',
+    symbol: 'ATOM',
+    name: 'Cosmos',
+    decimals: 6,
+    logoUrl: '/assets/tokens/atom.png',
+    networks: {
+      eth: {
+        contractAddress: '0x8D983cb9388EaC77af0474fA441C722E3a0244a0',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'algo',
+    symbol: 'ALGO',
+    name: 'Algorand',
+    decimals: 6,
+    logoUrl: '/assets/tokens/algo.png',
+    networks: {
+      eth: {
+        contractAddress: '0x6B0b0af3817F44b7F54331Fb8584F99DFa5C1505',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'icp',
+    symbol: 'ICP',
+    name: 'Internet Computer',
+    decimals: 8,
+    logoUrl: '/assets/tokens/icp.png',
+    networks: {
+      eth: {
+        contractAddress: '0x054D4982a36d0Ae7e96B18E5FF939CE6C3E20190',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'apt',
+    symbol: 'APT',
+    name: 'Aptos',
+    decimals: 8,
+    logoUrl: '/assets/tokens/apt.png',
+    networks: {
+      aptos: {
+        isNative: true,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'near',
+    symbol: 'NEAR',
+    name: 'NEAR Protocol',
+    decimals: 24,
+    logoUrl: '/assets/tokens/near.png',
+    networks: {
+      near: {
+        isNative: true,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'sui',
+    symbol: 'SUI',
+    name: 'Sui',
+    decimals: 9,
+    logoUrl: '/assets/tokens/sui.png',
+    networks: {
+      sui: {
+        isNative: true,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  
+  // Gaming и Metaverse
+  {
+    id: 'sand',
+    symbol: 'SAND',
+    name: 'The Sandbox',
+    decimals: 18,
+    logoUrl: '/assets/tokens/sand.png',
+    networks: {
+      eth: {
+        contractAddress: '0x3845badAde8e6dFF049820680d1F14bD3903a5d0',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'mana',
+    symbol: 'MANA',
+    name: 'Decentraland',
+    decimals: 18,
+    logoUrl: '/assets/tokens/mana.png',
+    networks: {
+      eth: {
+        contractAddress: '0x0F5D2fB29fb7d3CFeE444a200298f468908cC942',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'gala',
+    symbol: 'GALA',
+    name: 'Gala',
+    decimals: 8,
+    logoUrl: '/assets/tokens/gala.png',
+    networks: {
+      eth: {
+        contractAddress: '0xd1d2Eb1B1e90B638588728b4130137D262C87cae',
+        isNative: false,
+      },
+      bsc: {
+        contractAddress: '0x7dDEE5D84F80A61F826Ea53E8Bb0C5F0565aCDE3',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'axs',
+    symbol: 'AXS',
+    name: 'Axie Infinity',
+    decimals: 18,
+    logoUrl: '/assets/tokens/axs.png',
+    networks: {
+      eth: {
+        contractAddress: '0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  
+  // AI и Oracle
+  {
+    id: 'ocean',
+    symbol: 'OCEAN',
+    name: 'Ocean Protocol',
+    decimals: 18,
+    logoUrl: '/assets/tokens/ocean.png',
+    networks: {
+      eth: {
+        contractAddress: '0x967da4048cD07aB37855c090aAF366e4ce1b9F48',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'fet',
+    symbol: 'FET',
+    name: 'Fetch.ai',
+    decimals: 18,
+    logoUrl: '/assets/tokens/fet.png',
+    networks: {
+      eth: {
+        contractAddress: '0xaea46A60368A7bD060eec7DF8CBa43b7EF41Ad85',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  
+  // Privacy Coins
+  {
+    id: 'xmr',
+    symbol: 'XMR',
+    name: 'Monero',
+    decimals: 12,
+    logoUrl: '/assets/tokens/xmr.png',
+    networks: {},
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'dash',
+    symbol: 'DASH',
+    name: 'Dash',
+    decimals: 8,
+    logoUrl: '/assets/tokens/dash.png',
+    networks: {
+      eth: {
+        contractAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  
+  // DeFi
+  {
+    id: 'mkr',
+    symbol: 'MKR',
+    name: 'Maker',
+    decimals: 18,
+    logoUrl: '/assets/tokens/mkr.png',
+    networks: {
+      eth: {
+        contractAddress: '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2',
+        isNative: false,
+      }
+    },
+    type: 'governance',
+    isPopular: false,
+  },
+  {
+    id: 'snx',
+    symbol: 'SNX',
+    name: 'Synthetix',
+    decimals: 18,
+    logoUrl: '/assets/tokens/snx.png',
+    networks: {
+      eth: {
+        contractAddress: '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F',
+        isNative: false,
+      },
+      optimism: {
+        contractAddress: '0x8700dAec35aF8Ff88c16BdF0418774CB3D7599B4',
+        isNative: false,
+      }
+    },
+    type: 'defi',
+    isPopular: false,
+  },
+  {
+    id: '1inch',
+    symbol: '1INCH',
+    name: '1inch',
+    decimals: 18,
+    logoUrl: '/assets/tokens/1inch.png',
+    networks: {
+      eth: {
+        contractAddress: '0x111111111117dC0aa78b770fA6A738034120C302',
+        isNative: false,
+      },
+      bsc: {
+        contractAddress: '0x111111111117dC0aa78b770fA6A738034120C302',
+        isNative: false,
+      }
+    },
+    type: 'defi',
+    isPopular: false,
+  },
+  {
+    id: 'bal',
+    symbol: 'BAL',
+    name: 'Balancer',
+    decimals: 18,
+    logoUrl: '/assets/tokens/bal.png',
+    networks: {
+      eth: {
+        contractAddress: '0xba100000625a3754423978a60c9317c58a424e3D',
+        isNative: false,
+      },
+      polygon: {
+        contractAddress: '0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3',
+        isNative: false,
+      }
+    },
+    type: 'defi',
+    isPopular: false,
+  },
+  {
+    id: 'yfi',
+    symbol: 'YFI',
+    name: 'yearn.finance',
+    decimals: 18,
+    logoUrl: '/assets/tokens/yfi.png',
+    networks: {
+      eth: {
+        contractAddress: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e',
+        isNative: false,
+      }
+    },
+    type: 'defi',
+    isPopular: false,
+  },
+  {
+    id: 'ldo',
+    symbol: 'LDO',
+    name: 'Lido DAO',
+    decimals: 18,
+    logoUrl: '/assets/tokens/ldo.png',
+    networks: {
+      eth: {
+        contractAddress: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
+        isNative: false,
+      }
+    },
+    type: 'governance',
+    isPopular: false,
+  },
+  
+  // Enterprise
+  {
+    id: 'xdc',
+    symbol: 'XDC',
+    name: 'XDC Network',
+    decimals: 18,
+    logoUrl: '/assets/tokens/xdc.png',
+    networks: {},
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'vet',
+    symbol: 'VET',
+    name: 'VeChain',
+    decimals: 18,
+    logoUrl: '/assets/tokens/vet.png',
+    networks: {
+      eth: {
+        contractAddress: '0xD850942eF8811f2A866692A623011bDE52a462C1',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'hbar',
+    symbol: 'HBAR',
+    name: 'Hedera',
+    decimals: 8,
+    logoUrl: '/assets/tokens/hbar.png',
+    networks: {
+      eth: {
+        contractAddress: '0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  
+  // Meme Coins
+  {
+    id: 'pepe',
+    symbol: 'PEPE',
+    name: 'Pepe',
+    decimals: 18,
+    logoUrl: '/assets/tokens/pepe.png',
+    networks: {
+      eth: {
+        contractAddress: '0x6982508145454Ce325dDbE47a25d4ec3d2311933',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'floki',
+    symbol: 'FLOKI',
+    name: 'Floki Inu',
+    decimals: 9,
+    logoUrl: '/assets/tokens/floki.png',
+    networks: {
+      eth: {
+        contractAddress: '0xcf0C122c6b73ff809C693DB761e7BaeBe62b6a2E',
+        isNative: false,
+      },
+      bsc: {
+        contractAddress: '0xfb5B838b6cfEEdC2873aB27866079AC55363D37E',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'bonk',
+    symbol: 'BONK',
+    name: 'Bonk',
+    decimals: 5,
+    logoUrl: '/assets/tokens/bonk.png',
+    networks: {
+      solana: {
+        contractAddress: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  
+  // Tokens с высокой капитализацией
+  {
+    id: 'ltc',
+    symbol: 'LTC',
+    name: 'Litecoin',
+    decimals: 8,
+    logoUrl: '/assets/tokens/ltc.png',
+    networks: {
+      eth: {
+        contractAddress: '0x8A732BC91c33c167F868E0af7e6f31e0776d0f71',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: true,
+  },
+  {
+    id: 'etc',
+    symbol: 'ETC',
+    name: 'Ethereum Classic',
+    decimals: 18,
+    logoUrl: '/assets/tokens/etc.png',
+    networks: {
+      eth: {
+        contractAddress: '0x33c2D8406c66c604F79d19008549A22f6F54D80C',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'bch',
+    symbol: 'BCH',
+    name: 'Bitcoin Cash',
+    decimals: 8,
+    logoUrl: '/assets/tokens/bch.png',
+    networks: {
+      eth: {
+        contractAddress: '0x3F382DbD960E3a9bbCeaE22651E88158d2791550',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'fil',
+    symbol: 'FIL',
+    name: 'Filecoin',
+    decimals: 18,
+    logoUrl: '/assets/tokens/fil.png',
+    networks: {
+      eth: {
+        contractAddress: '0x6e1A19F235bE7ED8E3369eF73b196C07257494DE',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'klay',
+    symbol: 'KLAY',
+    name: 'Klaytn',
+    decimals: 18,
+    logoUrl: '/assets/tokens/klay.png',
+    networks: {},
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'theta',
+    symbol: 'THETA',
+    name: 'Theta Network',
+    decimals: 18,
+    logoUrl: '/assets/tokens/theta.png',
+    networks: {
+      eth: {
+        contractAddress: '0x3883f5e181fccaF8410FA61e12b59BAd963fb645',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'xtz',
+    symbol: 'XTZ',
+    name: 'Tezos',
+    decimals: 6,
+    logoUrl: '/assets/tokens/xtz.png',
+    networks: {
+      eth: {
+        contractAddress: '0x2e59005c5c0f0a4D77CcA82653d48b46322EE5Cd',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'ftt',
+    symbol: 'FTT',
+    name: 'FTX Token',
+    decimals: 18,
+    logoUrl: '/assets/tokens/ftt.png',
+    networks: {
+      eth: {
+        contractAddress: '0x50D1c9771902476076eCFc8B2A83Ad6b9355a4c9',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'egld',
+    symbol: 'EGLD',
+    name: 'MultiversX',
+    decimals: 18,
+    logoUrl: '/assets/tokens/egld.png',
+    networks: {
+      eth: {
+        contractAddress: '0xbf7c81fff98bbe61b40ed186e4afd6ddd01337fe',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'flow',
+    symbol: 'FLOW',
+    name: 'Flow',
+    decimals: 8,
+    logoUrl: '/assets/tokens/flow.png',
+    networks: {
+      eth: {
+        contractAddress: '0x5c147e74D63B1D31AA3Fd78Eb229B65161983B2b',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'xlm',
+    symbol: 'XLM',
+    name: 'Stellar',
+    decimals: 7,
+    logoUrl: '/assets/tokens/xlm.png',
+    networks: {
+      eth: {
+        contractAddress: '0x8076C74C5e3F5852037F31Ff0093Eeb8c8ADd8D3',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'celo',
+    symbol: 'CELO',
+    name: 'Celo',
+    decimals: 18,
+    logoUrl: '/assets/tokens/celo.png',
+    networks: {
+      eth: {
+        contractAddress: '0x471EcE3750Da237f93B8E339c536989b8978a438',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'enj',
+    symbol: 'ENJ',
+    name: 'Enjin Coin',
+    decimals: 18,
+    logoUrl: '/assets/tokens/enj.png',
+    networks: {
+      eth: {
+        contractAddress: '0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'neo',
+    symbol: 'NEO',
+    name: 'NEO',
+    decimals: 8,
+    logoUrl: '/assets/tokens/neo.png',
+    networks: {
+      eth: {
+        contractAddress: '0xd0d5d72aF05AE428397bB069659813a2C44c0Ea0',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'qtum',
+    symbol: 'QTUM',
+    name: 'Qtum',
+    decimals: 8,
+    logoUrl: '/assets/tokens/qtum.png',
+    networks: {
+      eth: {
+        contractAddress: '0x9a642d6b3368ddc662CA244bAdf32cDA716005BC',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'hot',
+    symbol: 'HOT',
+    name: 'Holo',
+    decimals: 18,
+    logoUrl: '/assets/tokens/hot.png',
+    networks: {
+      eth: {
+        contractAddress: '0x6c6EE5e31d828De241282B9606C8e98Ea48526E2',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'zec',
+    symbol: 'ZEC',
+    name: 'Zcash',
+    decimals: 8,
+    logoUrl: '/assets/tokens/zec.png',
+    networks: {
+      eth: {
+        contractAddress: '0x1C5db575E2Ff833E46a2E9864C22F4B22E0B37C2',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'waves',
+    symbol: 'WAVES',
+    name: 'Waves',
+    decimals: 8,
+    logoUrl: '/assets/tokens/waves.png',
+    networks: {
+      eth: {
+        contractAddress: '0x1cF4592ebfFd730c7dc92c1bdFFDfc3B9EfCf29a',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'ton',
+    symbol: 'TON',
+    name: 'Toncoin',
+    decimals: 9,
+    logoUrl: '/assets/tokens/ton.png',
+    networks: {
+      ton: {
+        isNative: true,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: true,
+  },
+  {
+    id: 'kcs',
+    symbol: 'KCS',
+    name: 'KuCoin Token',
+    decimals: 6,
+    logoUrl: '/assets/tokens/kcs.png',
+    networks: {
+      eth: {
+        contractAddress: '0xf34960d9d60be18cc1d5afc1a6f012a723a28748',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  },
+  {
+    id: 'ar',
+    symbol: 'AR',
+    name: 'Arweave',
+    decimals: 12,
+    logoUrl: '/assets/tokens/ar.png',
+    networks: {
+      eth: {
+        contractAddress: '0xBA3Cb8329D442E6F9EB70fEfe439952F15d2202c',
+        isNative: false,
+      }
+    },
+    type: 'cryptocurrency',
+    isPopular: false,
+  }
 ];
 
 // Получить токены с фильтрацией
