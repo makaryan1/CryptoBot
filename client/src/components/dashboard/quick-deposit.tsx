@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { T } from "@/lib/i18n";
+import { Wallet } from "@shared/schema";
 
 export default function QuickDeposit() {
   const [selectedTokenId, setSelectedTokenId] = useState("usdt");
@@ -17,7 +18,7 @@ export default function QuickDeposit() {
   const { toast } = useToast();
 
   // Получение данных о кошельках пользователя
-  const { data: wallets = [], isLoading: isLoadingWallets } = useQuery({
+  const { data: wallets = [], isLoading: isLoadingWallets } = useQuery<Wallet[]>({
     queryKey: ["/api/wallets"],
   });
   
@@ -49,7 +50,7 @@ export default function QuickDeposit() {
   
   // Найти кошелек для выбранной валюты
   const findWallet = () => {
-    if (!wallets.length || !selectedToken) return null;
+    if (!wallets || !Array.isArray(wallets) || !wallets.length || !selectedToken) return null;
     return wallets.find((wallet) => wallet.currency === selectedToken.symbol);
   };
   

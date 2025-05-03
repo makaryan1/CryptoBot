@@ -35,7 +35,7 @@ export function setupWalletRoutes(app: Express) {
   // Generate deposit address for a currency
   app.post('/api/wallets/generate-address', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { currency } = req.body;
+      const { currency, network } = req.body;
       
       if (!currency) {
         return res.status(400).json({ message: "Currency is required" });
@@ -57,7 +57,7 @@ export function setupWalletRoutes(app: Express) {
       if (!wallet.address) {
         // In a real app, this would be replaced with actual crypto address generation
         // via integration with crypto payment providers
-        const generatedAddress = generateMockAddress(currency);
+        const generatedAddress = generateMockAddress(currency, network);
         wallet = await storage.updateWallet(wallet.id, { address: generatedAddress });
       }
       
@@ -245,20 +245,41 @@ export function setupWalletRoutes(app: Express) {
   });
 }
 
-// Helper function to generate a mock address based on currency
-function generateMockAddress(currency: string): string {
+// Helper function to generate a mock address based on currency and network
+function generateMockAddress(currency: string, network?: string): string {
   const randomHex = randomBytes(20).toString('hex');
   
-  if (currency.includes('BTC')) {
+  if (currency === 'BTC' || currency.includes('BTC')) {
     return `bc1${randomHex.substring(0, 38)}`;
-  } else if (currency.includes('ETH') || currency.includes('BEP20') || currency.includes('ERC20')) {
+  } else if (network === 'eth' || network === 'ethereum') {
     return `0x${randomHex.substring(0, 40)}`;
-  } else if (currency.includes('TRC20')) {
+  } else if (network === 'bsc') {
+    return `0x${randomHex.substring(0, 40)}`;
+  } else if (network === 'tron') {
     return `T${randomHex.substring(0, 33)}`;
-  } else if (currency.includes('SOL')) {
+  } else if (network === 'solana') {
     return randomHex.substring(0, 44);
+  } else if (network === 'polygon') {
+    return `0x${randomHex.substring(0, 40)}`;
+  } else if (network === 'avalanche') {
+    return `0x${randomHex.substring(0, 40)}`;
+  } else if (network === 'fantom') {
+    return `0x${randomHex.substring(0, 40)}`;
+  } else if (network === 'optimism') {
+    return `0x${randomHex.substring(0, 40)}`;
+  } else if (network === 'arbitrum') {
+    return `0x${randomHex.substring(0, 40)}`;
   } else {
-    return randomHex.substring(0, 42);
+    // Fallback based on currency if network is not provided
+    if (currency === 'ETH' || currency.includes('ETH')) {
+      return `0x${randomHex.substring(0, 40)}`;
+    } else if (currency === 'SOL' || currency.includes('SOL')) {
+      return randomHex.substring(0, 44);
+    } else if (currency === 'TRX' || currency.includes('TRX')) {
+      return `T${randomHex.substring(0, 33)}`;
+    } else {
+      return randomHex.substring(0, 42);
+    }
   }
 }
 
