@@ -96,43 +96,8 @@ const BotPerformance = ({ t }: { t: (key: string, params?: Record<string, string
   );
 };
 
-// Компонент для добавления ключей API биржи
-const ExchangeApiSetup = ({ t }: { t: (key: string, params?: Record<string, string | number>) => string }) => {
-  return (
-    <Card className="mb-6 border-2 border-dashed border-yellow-300 bg-yellow-50 dark:bg-yellow-900/10">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-md flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-yellow-500" />
-          {t('dashboard.connectExchange')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-muted-foreground mb-3">{t('dashboard.connectExchangeDescription')}</p>
-        <div className="flex flex-wrap gap-2 mb-3">
-          <Button variant="outline" size="sm" className="gap-1 border border-yellow-200">
-            <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.svg?v=026" className="h-4 w-4" alt="Binance" />
-            Binance
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1 border border-yellow-200">
-            <img src="https://cryptologos.cc/logos/huobi-token-ht-logo.svg?v=026" className="h-4 w-4" alt="Huobi" />
-            Huobi
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1 border border-yellow-200">
-            <img src="https://cryptologos.cc/logos/kucoin-kcs-logo.svg?v=026" className="h-4 w-4" alt="KuCoin" />
-            KuCoin
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1 border border-yellow-200">
-            Bybit
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1 border border-yellow-200">
-            OKX
-          </Button>
-        </div>
-        <Button className="w-full bg-yellow-500 hover:bg-yellow-600">{t('dashboard.connectApi')}</Button>
-      </CardContent>
-    </Card>
-  );
-};
+// Импортируем компонент для добавления ключей API биржи
+import ApiConnector from "@/components/exchange/api-connector";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -168,7 +133,7 @@ export default function Dashboard() {
           <QuickActions t={t} />
           
           {/* Соединение с биржей */}
-          <ExchangeApiSetup t={t} />
+          <ApiConnector />
           
           {/* График производительности ботов */}
           <BotPerformance t={t} />
