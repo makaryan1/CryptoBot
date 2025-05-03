@@ -14,9 +14,13 @@ const NavItem = ({ icon, label, href, active }: NavItemProps) => {
   return (
     <li>
       <Link href={href}>
-        <a className={`flex items-center ${active ? 'text-primary bg-blue-50' : 'text-neutral-400 hover:text-primary hover:bg-blue-50'} rounded-md p-2`}>
-          <i className={`${icon} mr-3`}></i>
-          {label}
+        <a className={`flex items-center transition-all duration-200 ${
+          active 
+            ? 'text-primary bg-primary/10 font-medium border-l-4 border-primary pl-[0.625rem]' 
+            : 'text-muted-foreground hover:text-foreground hover:bg-muted border-l-4 border-transparent pl-[0.625rem]'
+          } rounded-md py-2.5 pr-3`}>
+          <i className={`${icon} mr-3 text-lg ${active ? 'text-primary' : ''}`}></i>
+          <span>{label}</span>
         </a>
       </Link>
     </li>
@@ -33,20 +37,20 @@ export default function Sidebar() {
   };
 
   const sidebarClasses = isMobileOpen 
-    ? "w-full md:w-64 bg-white border-r border-neutral-200 flex-shrink-0 shadow-sm md:h-screen md:sticky md:top-0 transition-all duration-300 fixed inset-0 z-40" 
-    : "w-full md:w-64 bg-white border-r border-neutral-200 flex-shrink-0 shadow-sm md:h-screen md:sticky md:top-0 transition-all duration-300";
+    ? "w-full md:w-72 bg-card border-r border-border flex-shrink-0 shadow-md md:h-screen md:sticky md:top-0 transition-all duration-300 fixed inset-0 z-40" 
+    : "w-full md:w-72 bg-card border-r border-border flex-shrink-0 shadow-md md:h-screen md:sticky md:top-0 transition-all duration-300 hidden md:block";
 
   return (
     <aside className={sidebarClasses} id="sidebar">
-      <div className="p-4 flex items-center justify-between border-b border-neutral-200">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-md bg-primary text-white">
-            <i className="ri-robot-line"></i>
+      <div className="p-5 flex items-center justify-between border-b border-border">
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-md bg-primary text-white shadow-md">
+            <i className="ri-robot-line text-xl"></i>
           </div>
-          <span className="font-bold text-lg">CryptoBot</span>
+          <span className="font-bold text-xl bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">CryptoBot</span>
         </div>
-        <button className="md:hidden text-neutral-400 hover:text-dark" onClick={toggleMobileSidebar}>
-          <i className="ri-close-line text-xl"></i>
+        <button className="md:hidden text-muted-foreground hover:text-foreground transition-colors" onClick={toggleMobileSidebar}>
+          <i className="ri-close-line text-2xl"></i>
         </button>
       </div>
       
