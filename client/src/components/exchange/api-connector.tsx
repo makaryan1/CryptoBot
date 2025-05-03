@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { useI18n } from "@/hooks/use-i18n";
-import { useToast } from "@/hooks/use-toast";
-import { queryClient, apiRequest } from "@/lib/queryClient";
+import { toast } from "@/hooks/use-toast";
+import { useExchangeApi, ExchangeApiKey } from "@/hooks/use-exchange-api";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Sparkles, Key, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
+import { Sparkles, Key, AlertCircle, CheckCircle, RefreshCw, Trash2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 const SUPPORTED_EXCHANGES = [
   { 
@@ -46,24 +46,12 @@ const SUPPORTED_EXCHANGES = [
   }
 ];
 
-interface ExchangeApiKey {
-  exchange: string;
-  apiKey: string;
-  apiSecret: string;
-  description?: string;
-  permissions?: string[];
-  testnetMode?: boolean;
-}
-
 interface ApiConnectorProps {
-  connectedApis?: ExchangeApiKey[];
-  onChange?: (apis: ExchangeApiKey[]) => void;
   className?: string;
 }
 
-export default function ApiConnector({ connectedApis = [], onChange, className = "" }: ApiConnectorProps) {
+export default function ApiConnector({ className = "" }: ApiConnectorProps) {
   const { t } = useI18n();
-  const { toast } = useToast();
   const [selectedExchange, setSelectedExchange] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<{
@@ -77,73 +65,18 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
     description: "",
     testnetMode: false,
   });
-
-  // Мутация для добавления API ключа
-  const addApiKeyMutation = useMutation({
-    mutationFn: async (data: ExchangeApiKey) => {
-      const response = await apiRequest("POST", "/api/exchange/api-keys", data);
-      return await response.json();
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/exchange/api-keys"] });
-      toast({
-        title: t("exchange.apiConnected"),
-        description: t("exchange.apiConnectionSuccess", { exchange: data.exchange }),
-      });
-      setIsDialogOpen(false);
-      resetForm();
-    },
-    onError: (error: Error) => {
-      toast({
-        title: t("exchange.apiConnectionFailed"),
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Мутация для тестирования API ключа
-  const testApiKeyMutation = useMutation({
-    mutationFn: async (data: ExchangeApiKey) => {
-      const response = await apiRequest("POST", "/api/exchange/test-api-key", data);
-      return await response.json();
-    },
-    onSuccess: (data) => {
-      toast({
-        title: t("exchange.apiTestSuccess"),
-        description: t("exchange.apiTestSuccessDescription"),
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: t("exchange.apiTestFailed"),
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Мутация для удаления API ключа
-  const deleteApiKeyMutation = useMutation({
-    mutationFn: async (data: { id: number }) => {
-      const response = await apiRequest("DELETE", `/api/exchange/api-keys/${data.id}`);
-      return await response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/exchange/api-keys"] });
-      toast({
-        title: t("exchange.apiRemoved"),
-        description: t("exchange.apiRemovedSuccess"),
-      });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: t("exchange.apiRemovalFailed"),
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+  
+  // Используем хук для получения API ключей и методов для работы с ними
+  const { 
+    apiKeys, 
+    isLoadingApiKeys,
+    createApiKey,
+    deleteApiKey,
+    testApiKey,
+    isCreating,
+    isDeleting,
+    isTesting
+  } = useExchangeApi();
 
   const resetForm = () => {
     setFormData({
@@ -179,13 +112,16 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
       return;
     }
 
-    addApiKeyMutation.mutate({
+    createApiKey({
       exchange: selectedExchange,
       apiKey: formData.apiKey,
       apiSecret: formData.apiSecret,
       description: formData.description,
       testnetMode: formData.testnetMode,
     });
+    
+    setIsDialogOpen(false);
+    resetForm();
   };
 
   const handleTestConnection = () => {
@@ -198,16 +134,22 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
       return;
     }
 
-    testApiKeyMutation.mutate({
+    testApiKey({
       exchange: selectedExchange,
       apiKey: formData.apiKey,
       apiSecret: formData.apiSecret,
       testnetMode: formData.testnetMode,
     });
   };
+  
+  const handleDeleteApiKey = (id: number) => {
+    if (window.confirm(t("exchange.confirmApiKeyDelete"))) {
+      deleteApiKey(id);
+    }
+  };
 
   const getConnectedStatus = () => {
-    const connected = connectedApis.length;
+    const connected = apiKeys.length;
     const total = SUPPORTED_EXCHANGES.length;
     return `${connected}/${total}`;
   };
@@ -223,7 +165,7 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
           <CardTitle className="text-md flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-yellow-500" />
             {t("dashboard.connectExchange")}
-            {connectedApis.length > 0 && (
+            {apiKeys.length > 0 && (
               <span className="text-xs bg-green-100 text-green-800 py-0.5 px-2 rounded-full ml-2">
                 {getConnectedStatus()}
               </span>
@@ -234,13 +176,13 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
           <p className="text-sm text-muted-foreground mb-3">{t("dashboard.connectExchangeDescription")}</p>
           <div className="flex flex-wrap gap-2 mb-3">
             {SUPPORTED_EXCHANGES.map((exchange) => {
-              const isConnected = connectedApis.some(api => api.exchange === exchange.id);
+              const isConnected = apiKeys.some(api => api.exchange === exchange.id);
               return (
                 <Button
                   key={exchange.id}
                   variant="outline"
                   size="sm"
-                  className={`gap-1 border ${isConnected ? 'border-green-300 bg-green-50' : `border-${exchange.color}`}`}
+                  className={`gap-1 border ${isConnected ? 'border-green-300 bg-green-50' : ''}`}
                   onClick={() => handleExchangeSelect(exchange.id)}
                 >
                   {exchange.logo && (
@@ -252,11 +194,53 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
               );
             })}
           </div>
+          
+          {/* API ключи пользователя */}
+          {apiKeys.length > 0 && (
+            <div className="space-y-3 mt-4 mb-4">
+              <h4 className="text-sm font-medium">{t("exchange.yourApiKeys")}</h4>
+              {apiKeys.map((apiKey) => {
+                const exchange = SUPPORTED_EXCHANGES.find(e => e.id === apiKey.exchange);
+                return (
+                  <div key={apiKey.id} className="flex items-center justify-between p-2 bg-card rounded-md border">
+                    <div className="flex items-center gap-2">
+                      {exchange?.logo ? (
+                        <img src={exchange.logo} className="h-5 w-5" alt={exchange.name} />
+                      ) : (
+                        <Key className="h-5 w-5 text-muted-foreground" />
+                      )}
+                      <div>
+                        <p className="text-sm font-medium">{exchange?.name || apiKey.exchange}</p>
+                        <p className="text-xs text-muted-foreground">{apiKey.apiKey}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {apiKey.testnetMode && (
+                        <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
+                          Testnet
+                        </Badge>
+                      )}
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => handleDeleteApiKey(apiKey.id!)}
+                        disabled={isDeleting}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          
           <Button 
             className="w-full bg-yellow-500 hover:bg-yellow-600"
             onClick={() => setIsDialogOpen(true)}
           >
-            {connectedApis.length > 0 ? t("exchange.manageApis") : t("dashboard.connectApi")}
+            {apiKeys.length > 0 ? t("exchange.addApiKey") : t("dashboard.connectApi")}
           </Button>
         </CardContent>
       </Card>
@@ -381,9 +365,9 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
                     type="button" 
                     variant="outline"
                     onClick={handleTestConnection}
-                    disabled={testApiKeyMutation.isPending || !formData.apiKey || !formData.apiSecret}
+                    disabled={isTesting || !formData.apiKey || !formData.apiSecret}
                   >
-                    {testApiKeyMutation.isPending ? (
+                    {isTesting ? (
                       <>
                         <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                         {t("exchange.testing")}
@@ -403,9 +387,9 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
                     </Button>
                     <Button 
                       type="submit" 
-                      disabled={addApiKeyMutation.isPending || !formData.apiKey || !formData.apiSecret}
+                      disabled={isCreating || !formData.apiKey || !formData.apiSecret}
                     >
-                      {addApiKeyMutation.isPending ? t("common.saving") : t("common.save")}
+                      {isCreating ? t("common.saving") : t("common.save")}
                     </Button>
                   </div>
                 </DialogFooter>

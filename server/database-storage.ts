@@ -8,7 +8,8 @@ import {
   supportTickets, type SupportTicket, type InsertSupportTicket,
   supportMessages, type SupportMessage, type InsertSupportMessage,
   notifications, type Notification, type InsertNotification,
-  settings, type Settings
+  settings, type Settings,
+  exchangeApiKeys, type ExchangeApiKey, type InsertExchangeApiKey
 } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
