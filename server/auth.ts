@@ -105,13 +105,23 @@ export function setupAuth(app: Express) {
       // Generate referral code
       const referralCode = uuidv4().substring(0, 8);
 
-      // Create user
-      const user = await storage.createUser({
-        ...req.body,
+      // Create user - extract only the fields we want from the request body to avoid extra fields
+      const userData = {
+        email: req.body.email,
         password: await hashPassword(req.body.password),
+        fullName: req.body.fullName || null,
+        phoneNumber: req.body.phoneNumber || null,
+        country: req.body.country || null,
+        dateOfBirth: req.body.dateOfBirth || null,
+        telegram: req.body.telegram || null,
+        language: req.body.language || "en",
+        referrerId: req.body.referrerId || null,
         referralCode,
         isEmailVerified: process.env.NODE_ENV === "development", // Auto-verify in development
-      });
+      };
+
+      // Create user
+      const user = await storage.createUser(userData);
 
       // Create initial wallets for the user
       const currencies = ["USDT", "BTC", "ETH"];
@@ -178,7 +188,7 @@ export function setupAuth(app: Express) {
   app.patch("/api/user/profile", (req, res, next) => {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Not authenticated" });
 
-    const allowedFields = ["fullName", "telegram", "language"];
+    const allowedFields = ["fullName", "phoneNumber", "country", "telegram", "language"];
     const updateData: Record<string, any> = {};
 
     allowedFields.forEach(field => {

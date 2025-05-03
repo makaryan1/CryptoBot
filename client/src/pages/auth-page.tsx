@@ -38,6 +38,9 @@ export default function AuthPage() {
       email: "",
       password: "",
       confirmPassword: "",
+      fullName: "",
+      phoneNumber: "",
+      country: "",
       acceptTerms: false,
       referrerId: referralCode ? parseInt(referralCode) : undefined,
     },
@@ -164,6 +167,48 @@ export default function AuthPage() {
                             <FormLabel>Confirm Password</FormLabel>
                             <FormControl>
                               <Input type="password" placeholder="••••••••" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={registerForm.control}
+                        name="fullName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Full Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="John Doe" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={registerForm.control}
+                        name="phoneNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="+1 234 567 8900" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={registerForm.control}
+                        name="country"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Country</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Country" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
