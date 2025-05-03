@@ -34,7 +34,7 @@ export function useBots() {
   
   // Fetch user bots
   const { data: userBots, isLoading: userBotsLoading } = useQuery<UserBot[]>({
-    queryKey: ["/api/bots/user"],
+    queryKey: ["/api/user/bots"],
     enabled: !!user,
   });
   
@@ -69,7 +69,7 @@ export function useBots() {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/bots/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/bots"] });
       queryClient.invalidateQueries({ queryKey: ["/api/wallets"] });
       toast({
         title: "Bot launched",
@@ -92,7 +92,7 @@ export function useBots() {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/bots/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/bots"] });
       queryClient.invalidateQueries({ queryKey: ["/api/wallets"] });
       toast({
         title: "Bot stopped",
