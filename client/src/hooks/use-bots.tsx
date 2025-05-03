@@ -43,16 +43,28 @@ export function useBots() {
     mutationFn: async ({ 
       botId, 
       initialInvestment,
-      currency = "USDT" 
+      currency = "USDT",
+      stopLossPercentage = null,
+      takeProfitPercentage = null,
+      maxDurationDays = null,
+      strategy = "trend_following"
     }: { 
       botId: number;
       initialInvestment: number; 
       currency?: string;
+      stopLossPercentage?: number | null;
+      takeProfitPercentage?: number | null;
+      maxDurationDays?: number | null;
+      strategy?: string;
     }) => {
       const res = await apiRequest("POST", "/api/bots/launch", {
         botId,
         initialInvestment,
-        currency
+        currency,
+        stopLossPercentage,
+        takeProfitPercentage,
+        maxDurationDays,
+        strategy
       });
       return res.json();
     },
@@ -186,9 +198,25 @@ export function useBots() {
     });
   };
   
-  // Launch a bot
-  const launchBot = (botId: number, initialInvestment: number) => {
-    launchBotMutation.mutate({ botId, initialInvestment });
+  // Launch a bot with advanced settings
+  const launchBot = (
+    botId: number, 
+    initialInvestment: number,
+    options?: {
+      strategy?: string;
+      stopLossPercentage?: number;
+      takeProfitPercentage?: number;
+      maxDurationDays?: number;
+    }
+  ) => {
+    launchBotMutation.mutate({ 
+      botId, 
+      initialInvestment,
+      strategy: options?.strategy,
+      stopLossPercentage: options?.stopLossPercentage,
+      takeProfitPercentage: options?.takeProfitPercentage,
+      maxDurationDays: options?.maxDurationDays
+    });
   };
   
   // Stop a bot

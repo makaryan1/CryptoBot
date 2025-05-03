@@ -70,6 +70,10 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
   const [investment, setInvestment] = useState(100);
   const [showModal, setShowModal] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState("trend_following");
+  const [stopLossPercentage, setStopLossPercentage] = useState<number | null>(null);
+  const [takeProfitPercentage, setTakeProfitPercentage] = useState<number | null>(null);
+  const [maxDurationDays, setMaxDurationDays] = useState<number | null>(null);
+  const [useAdvancedSettings, setUseAdvancedSettings] = useState(false);
   
   // Рассчитать прибыльность (демо)
   const calculateProfitSummary = () => {
@@ -89,7 +93,12 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
   const profitSummary = calculateProfitSummary();
   
   const handleLaunchBot = () => {
-    onLaunch(bot.id, investment);
+    onLaunch(bot.id, investment, {
+      strategy: selectedStrategy,
+      stopLossPercentage: stopLossPercentage,
+      takeProfitPercentage: takeProfitPercentage,
+      maxDurationDays: maxDurationDays
+    });
     setShowModal(false);
   };
   
@@ -206,6 +215,91 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
                   <div className="text-sm font-medium text-green-600">+{profitSummary.monthly}%</div>
                 </div>
               </div>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="useAdvancedSettings" 
+                  checked={useAdvancedSettings}
+                  onChange={(e) => setUseAdvancedSettings(e.target.checked)}
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <Label htmlFor="useAdvancedSettings" className="font-medium text-sm">
+                  <T keyName="bots.useAdvancedSettings" />
+                </Label>
+              </div>
+              
+              {useAdvancedSettings && (
+                <div className="bg-muted/50 p-4 rounded-lg space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="stopLoss" className="text-sm">
+                      <T keyName="bots.stopLoss" />
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="stopLoss"
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="5"
+                        value={stopLossPercentage || ""}
+                        onChange={(e) => setStopLossPercentage(e.target.value ? Number(e.target.value) : null)}
+                        className="w-full"
+                      />
+                      <span className="text-sm">%</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      <T keyName="bots.stopLossDescription" />
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="takeProfit" className="text-sm">
+                      <T keyName="bots.takeProfit" />
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="takeProfit"
+                        type="number"
+                        min="0"
+                        max="1000"
+                        placeholder="20"
+                        value={takeProfitPercentage || ""}
+                        onChange={(e) => setTakeProfitPercentage(e.target.value ? Number(e.target.value) : null)}
+                        className="w-full"
+                      />
+                      <span className="text-sm">%</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      <T keyName="bots.takeProfitDescription" />
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="maxDuration" className="text-sm">
+                      <T keyName="bots.maxDuration" />
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="maxDuration"
+                        type="number"
+                        min="1"
+                        max="365"
+                        placeholder="30"
+                        value={maxDurationDays || ""}
+                        onChange={(e) => setMaxDurationDays(e.target.value ? Number(e.target.value) : null)}
+                        className="w-full"
+                      />
+                      <span className="text-sm"><T keyName="bots.days" /></span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      <T keyName="bots.maxDurationDescription" />
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           
