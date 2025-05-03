@@ -8,6 +8,7 @@ import { setupBotRoutes } from "./api/bots";
 import { setupAdminRoutes } from "./api/admin";
 import { setupReferralRoutes } from "./api/referrals";
 import { setupSupportRoutes } from "./api/support";
+import exchangeRoutes from "./api/exchange";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes (/api/register, /api/login, /api/logout, /api/user)
@@ -20,6 +21,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   setupAdminRoutes(app);
   setupReferralRoutes(app);
   setupSupportRoutes(app);
+  
+  // Setup exchange routes for API key management and trading
+  app.use("/api/exchange", exchangeRoutes);
 
   const httpServer = createServer(app);
 

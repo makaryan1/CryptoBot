@@ -8,6 +8,7 @@ import {
   supportTickets, type SupportTicket, type InsertSupportTicket,
   supportMessages, type SupportMessage, type InsertSupportMessage,
   notifications, type Notification, type InsertNotification,
+  exchangeApiKeys, type ExchangeApiKey, type InsertExchangeApiKey,
   settings, type Settings
 } from "@shared/schema";
 import session from "express-session";
@@ -125,6 +126,7 @@ export class MemStorage implements IStorage {
     this.supportTicketsData = new Map();
     this.supportMessagesData = new Map();
     this.notificationsData = new Map();
+    this.exchangeApiKeysData = new Map();
     
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // 24 hours
@@ -555,6 +557,39 @@ export class MemStorage implements IStorage {
     return Array.from(this.usersData.values()).filter(
       (user) => user.referrerId === referrerId
     );
+  }
+  
+  // Exchange API Key operations
+  async getExchangeApiKey(id: number): Promise<ExchangeApiKey | undefined> {
+    return this.exchangeApiKeysData.get(id);
+  }
+  
+  async getExchangeApiKeysByUserId(userId: number): Promise<ExchangeApiKey[]> {
+    return Array.from(this.exchangeApiKeysData.values()).filter(
+      (apiKey) => apiKey.userId === userId
+    );
+  }
+  
+  async createExchangeApiKey(apiKeyData: InsertExchangeApiKey): Promise<ExchangeApiKey> {
+    const id = this.exchangeApiKeyIdCounter++;
+    const now = new Date().toISOString();
+    const apiKey: ExchangeApiKey = {
+      ...apiKeyData,
+      id,
+      permissions: apiKeyData.permissions || [],
+      lastUsed: null,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.exchangeApiKeysData.set(id, apiKey);
+    return apiKey;
+  }
+  
+  async deleteExchangeApiKey(id: number): Promise<void> {
+    if (!this.exchangeApiKeysData.has(id)) {
+      throw new Error(`API Key with ID ${id} not found`);
+    }
+    this.exchangeApiKeysData.delete(id);
   }
   
   // Initialize sample bots
