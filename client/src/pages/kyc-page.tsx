@@ -118,7 +118,8 @@ export default function KycPage() {
   
   const countries = [
     "United States", "United Kingdom", "Canada", "Australia", "Germany", 
-    "France", "Japan", "Singapore", "South Korea", "Brazil", "Spain"
+    "France", "Japan", "Singapore", "South Korea", "Brazil", "Spain",
+    "Russia", "Georgia", "Armenia"
   ];
   
   return (
