@@ -11,7 +11,7 @@ import { Slider } from "@/components/ui/slider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useBots } from "@/hooks/use-bots";
 import { T } from "@/lib/i18n";
-import { Info, Sparkles, Zap, ShieldAlert, Clock, TrendingUp, ChevronRight } from "lucide-react";
+import { Info, Sparkles, Zap, ShieldAlert, Clock, TrendingUp, ChevronRight, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 
 interface BotCardProps {
