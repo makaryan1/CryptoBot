@@ -74,32 +74,40 @@ export function BotCard({ bot }: BotCardProps) {
   return (
     <>
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg glass-effect border-border/50">
           <DialogHeader>
-            <DialogTitle className="flex items-center">
-              <div className={`w-8 h-8 rounded-md bg-${bot.iconBg} flex items-center justify-center text-${bot.iconColor} mr-3`}>
-                <i className={bot.icon}></i>
+            <DialogTitle className="flex items-center mb-2">
+              <div className="w-10 h-10 rounded-xl subtle-gradient flex items-center justify-center shadow-md mr-3 text-primary border border-primary/10">
+                {bot.icon && bot.icon.includes('ri-') ? (
+                  <i className={`${bot.icon} text-xl`}></i>
+                ) : (
+                  <Bot className="h-5 w-5" />
+                )}
               </div>
-              <T keyName="bots.launch.modal.title" />: {bot.name}
+              <span className="gradient-heading text-xl">
+                <T keyName="bots.launch.modal.title" />: {bot.name}
+              </span>
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-muted-foreground">
               <T keyName="bots.launch.modal.description" />
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-6 py-4">
             {/* Investment amount */}
-            <div className="space-y-2">
+            <div className="glass-effect p-4 rounded-xl space-y-3">
               <div className="flex justify-between">
-                <Label htmlFor="investment">
+                <Label htmlFor="investment" className="flex items-center text-base font-medium">
+                  <Wallet className="h-4 w-4 mr-2 text-primary" />
                   <T keyName="bots.launch.modal.investment" />
                 </Label>
-                <span className="text-sm text-primary font-semibold">${investment} USDT</span>
+                <span className="text-base bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent font-bold">${investment} USDT</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Button 
                   variant="outline" 
                   size="sm"
+                  className="rounded-lg hover:bg-primary/5"
                   onClick={() => setInvestment(Math.max(50, investment - 50))}
                 >
                   -
@@ -116,6 +124,7 @@ export function BotCard({ bot }: BotCardProps) {
                 <Button 
                   variant="outline" 
                   size="sm"
+                  className="rounded-lg hover:bg-primary/5"
                   onClick={() => setInvestment(Math.min(10000, investment + 50))}
                 >
                   +
@@ -129,9 +138,10 @@ export function BotCard({ bot }: BotCardProps) {
             </div>
             
             {/* Advanced settings toggle */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between bg-muted/30 p-4 rounded-xl">
               <div className="space-y-0.5">
-                <Label htmlFor="advanced-settings">
+                <Label htmlFor="advanced-settings" className="flex items-center font-medium">
+                  <Sparkles className="h-4 w-4 mr-2 text-accent" />
                   <T keyName="bots.launch.modal.advancedSettings" />
                 </Label>
                 <p className="text-xs text-muted-foreground">
@@ -146,9 +156,9 @@ export function BotCard({ bot }: BotCardProps) {
             </div>
             
             {useAdvancedSettings && (
-              <div className="space-y-4 bg-muted/30 p-4 rounded-lg border">
-                <h4 className="text-sm font-medium mb-3 flex items-center">
-                  <Sparkles className="h-4 w-4 mr-2 text-primary" />
+              <div className="space-y-4 glass-effect p-5 rounded-xl border border-primary/10 shadow-sm">
+                <h4 className="text-sm font-medium mb-3 flex items-center gradient-heading">
+                  <Sparkles className="h-4 w-4 mr-2" />
                   <T keyName="bots.launch.modal.protectionSettings" />
                 </h4>
                 
@@ -156,10 +166,10 @@ export function BotCard({ bot }: BotCardProps) {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="stop-loss" className="flex items-center">
-                      <ShieldAlert className="h-4 w-4 mr-2 text-red-500" />
+                      <ShieldAlert className="h-4 w-4 mr-2 text-destructive" />
                       <T keyName="bots.stopLoss" />
                     </Label>
-                    <span className="text-sm font-medium text-red-500">-{stopLoss}%</span>
+                    <span className="text-sm font-medium text-destructive">-{stopLoss}%</span>
                   </div>
                   <Slider
                     id="stop-loss"
@@ -179,10 +189,10 @@ export function BotCard({ bot }: BotCardProps) {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="take-profit" className="flex items-center">
-                      <TrendingUp className="h-4 w-4 mr-2 text-green-500" />
+                      <TrendingUp className="h-4 w-4 mr-2 text-success" />
                       <T keyName="bots.takeProfit" />
                     </Label>
-                    <span className="text-sm font-medium text-green-500">+{takeProfit}%</span>
+                    <span className="text-sm font-medium text-success">+{takeProfit}%</span>
                   </div>
                   <Slider
                     id="take-profit"
@@ -202,10 +212,10 @@ export function BotCard({ bot }: BotCardProps) {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="max-duration" className="flex items-center">
-                      <Clock className="h-4 w-4 mr-2 text-blue-500" />
+                      <Clock className="h-4 w-4 mr-2 text-accent" />
                       <T keyName="bots.maxDuration" />
                     </Label>
-                    <span className="text-sm font-medium text-blue-500">{maxDuration} <T keyName="bots.days" /></span>
+                    <span className="text-sm font-medium text-accent">{maxDuration} <T keyName="bots.days" /></span>
                   </div>
                   <Slider
                     id="max-duration"
@@ -224,10 +234,15 @@ export function BotCard({ bot }: BotCardProps) {
             )}
             
             {/* Bot Info Summary */}
-            <div className="bg-muted/30 p-4 rounded-lg space-y-3">
+            <div className="glass-effect p-4 rounded-xl space-y-3 border border-border/30">
+              <h4 className="text-sm font-medium flex items-center">
+                <Info className="h-4 w-4 mr-2 text-muted-foreground" />
+                <T keyName="bots.summary" />
+              </h4>
+              
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground"><T keyName="bots.profitPotential" /></span>
-                <span className="font-medium text-green-500">{bot.profitRange}</span>
+                <span className="font-medium text-success">{bot.profitRange}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground"><T keyName="bots.riskLevel" /></span>
@@ -241,94 +256,130 @@ export function BotCard({ bot }: BotCardProps) {
           </div>
           
           <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button variant="outline" onClick={() => setShowModal(false)}>
+            <Button variant="outline" onClick={() => setShowModal(false)} className="glass-effect">
               <T keyName="bots.launch.modal.cancel" />
             </Button>
-            <Button onClick={handleLaunchBot} disabled={isLoading} className="sm:flex-1">
+            <Button 
+              onClick={handleLaunchBot} 
+              disabled={isLoading} 
+              className="sm:flex-1 button-gradient border-0 shadow-md"
+            >
               {isLoading ? (
                 <>
                   <span className="mr-2"><T keyName="bots.launch.modal.launching" /></span>
                   <Loader2 className="h-4 w-4 animate-spin" />
                 </>
               ) : (
-                <T keyName="bots.launch.modal.launch" />
+                <>
+                  <Zap className="h-4 w-4 mr-2" />
+                  <T keyName="bots.launch.modal.launch" />
+                </>
               )}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       
-      <Card className="overflow-hidden hover:shadow-md transition-shadow duration-300 group relative">
-        <div className="absolute -right-20 -top-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-500"></div>
+      <Card className="card-hover overflow-hidden group relative glass-effect border-opacity-50">
+        <div className="absolute -right-20 -top-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-all duration-500"></div>
+        <div className="absolute -left-20 -bottom-20 w-40 h-40 bg-accent/5 rounded-full blur-3xl group-hover:bg-accent/10 transition-all duration-500"></div>
         
-        <div className="p-4 flex items-start justify-between mb-2">
+        <div className="p-5 flex items-start justify-between mb-1">
           <div className="flex items-center">
-            <div className={`w-10 h-10 rounded-md bg-${bot.iconBg} flex items-center justify-center text-${bot.iconColor} mr-3 shadow-sm`}>
-              <i className={bot.icon}></i>
+            <div className="w-11 h-11 rounded-xl subtle-gradient flex items-center justify-center shadow-md mr-3 text-primary border border-primary/10 group-hover:shadow-lg group-hover:shadow-primary/5 transition-all duration-300">
+              {bot.icon && bot.icon.includes('ri-') ? (
+                <i className={`${bot.icon} text-xl`}></i>
+              ) : (
+                <Bot className="h-5 w-5" />
+              )}
             </div>
             <div>
-              <h3 className="font-semibold text-lg">{bot.name}</h3>
+              <h3 className="font-bold text-lg gradient-heading">{bot.name}</h3>
               <p className="text-sm text-muted-foreground line-clamp-1">{bot.description}</p>
             </div>
           </div>
-          <Badge className={getRiskColor()}>{bot.riskLevel}</Badge>
+          <Badge variant="outline" className={`${getRiskColor()} border-0 shadow-sm`}>
+            {bot.riskLevel}
+          </Badge>
         </div>
         
         <CardContent className="pb-3 pt-0">
-          <div 
-            className="w-full h-24 mb-4 bg-cover bg-center rounded-md overflow-hidden" 
-            style={{
-              backgroundImage: `url(data:image/svg+xml;base64,${bot.chartBase64})`,
-            }}
-          ></div>
+          <div className="relative">
+            <div 
+              className="w-full h-32 mb-4 bg-cover bg-center rounded-lg overflow-hidden border border-border/30 shadow-sm" 
+              style={{
+                backgroundImage: `url(data:image/svg+xml;base64,${bot.chartBase64})`,
+              }}
+            />
+            <div className="absolute top-2 right-2">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge className="bg-white/80 hover:bg-white text-primary border-0 shadow-sm backdrop-blur-sm">
+                      {bot.type || "Trading Bot"}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">{bot.typeDescription || "Automated trading strategy"}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
           
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground flex items-center">
-                <TrendingUp className="h-4 w-4 mr-1" />
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-muted-foreground flex items-center">
+                <TrendingUp className="h-4 w-4 mr-1.5 text-success" />
                 <T keyName="bots.profit" />
               </span>
-              <span className="font-medium text-green-600">{bot.profitRange}</span>
+              <span className="font-semibold text-success">{bot.profitRange}</span>
             </div>
             
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground flex items-center">
-                  <ShieldAlert className="h-4 w-4 mr-1" />
+                  <ShieldAlert className="h-4 w-4 mr-1.5" />
                   <T keyName="bots.risk" />
                 </span>
-                <span className="text-xs">{getRiskProgress()}%</span>
+                <span className="text-xs font-medium">{bot.riskLevel}</span>
               </div>
-              <Progress value={getRiskProgress()} className={getProgressColor()} />
+              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                <div 
+                  className={`h-full ${getProgressColor()} transition-all duration-500 rounded-full`}
+                  style={{width: `${getRiskProgress()}%`}}
+                ></div>
+              </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <div className="bg-muted rounded-md p-2 text-center">
-                <div className="text-xs text-muted-foreground"><T keyName="bots.minInvestment" /></div>
-                <div className="font-medium">$50 USDT</div>
+            <div className="grid grid-cols-2 gap-3 mt-2">
+              <div className="glass-effect rounded-lg p-2.5 text-center">
+                <div className="text-xs text-muted-foreground mb-0.5"><T keyName="bots.minInvestment" /></div>
+                <div className="font-medium text-sm">$50 USDT</div>
               </div>
-              <div className="bg-muted rounded-md p-2 text-center">
-                <div className="text-xs text-muted-foreground"><T keyName="bots.avgCycle" /></div>
-                <div className="font-medium">7-14 <T keyName="bots.days" /></div>
+              <div className="glass-effect rounded-lg p-2.5 text-center">
+                <div className="text-xs text-muted-foreground mb-0.5"><T keyName="bots.avgCycle" /></div>
+                <div className="font-medium text-sm">7-14 <T keyName="bots.days" /></div>
               </div>
             </div>
           </div>
         </CardContent>
         
-        <CardFooter className="flex gap-2 pt-0">
+        <CardFooter className="flex gap-2 pt-1">
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex-1"
+            className="flex-1 glass-effect"
             asChild
           >
             <Link href={`/bots/${bot.id}`}>
               <Info className="h-4 w-4 mr-2" />
               <T keyName="bots.details" />
+              <ChevronRight className="ml-1 h-3 w-3 opacity-70" />
             </Link>
           </Button>
           <Button
-            className="flex-1"
+            className="flex-1 button-gradient border-0"
             size="sm"
             onClick={() => setShowModal(true)}
           >

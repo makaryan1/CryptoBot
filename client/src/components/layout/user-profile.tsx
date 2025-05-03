@@ -1,7 +1,13 @@
 import { useAuth } from "@/hooks/use-auth";
+import { useI18n } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut, ChevronRight, Crown } from "lucide-react";
+import { Link } from "wouter";
 
 export default function UserProfile() {
   const { user, logoutMutation } = useAuth();
+  const { t } = useI18n();
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -9,49 +15,71 @@ export default function UserProfile() {
 
   if (!user) return null;
 
+  // Default to bronze level if not specified
+  const referralLevel = user.referralLevel || 'bronze';
+  
+  // Get the user's referral badge data
+  const referralBadge = referralLevel === 'gold' 
+    ? {
+        label: t('referral.goldLevel') || 'Gold Level',
+        icon: <Crown className="h-3 w-3 mr-1 text-amber-500" />,
+        bg: 'bg-amber-100 dark:bg-amber-900/30',
+        textColor: 'text-amber-800 dark:text-amber-300'
+      }
+    : referralLevel === 'silver'
+    ? {
+        label: t('referral.silverLevel') || 'Silver Level',
+        icon: <Crown className="h-3 w-3 mr-1 text-gray-400" />,
+        bg: 'bg-slate-100 dark:bg-slate-700/30', 
+        textColor: 'text-slate-800 dark:text-slate-300'
+      }
+    : {
+        label: t('referral.bronzeLevel') || 'Bronze Level',
+        icon: <Crown className="h-3 w-3 mr-1 text-amber-600" />,
+        bg: 'bg-amber-50 dark:bg-amber-900/20',
+        textColor: 'text-amber-700 dark:text-amber-400'
+      };
+
   return (
-    <div className="bg-card rounded-xl p-4 shadow-sm border border-border">
-      <div className="flex items-center mb-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden mr-3 shadow-md">
-          <div className="w-full h-full bg-gradient-to-br from-primary to-blue-600 text-white flex items-center justify-center font-semibold text-lg">
+    <div className="glass-effect rounded-xl p-4">
+      <div className="flex items-center mb-4">
+        <Avatar className="h-10 w-10 mr-3 rounded-md overflow-hidden shadow-sm border-2 border-white/50 dark:border-slate-700/50">
+          <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-white">
             {user.email.charAt(0).toUpperCase()}
-          </div>
-        </div>
-        <div>
-          <p className="font-medium text-sm text-foreground">
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-sm text-foreground truncate">
             {user.fullName || user.email.split('@')[0]}
           </p>
-          <p className="text-xs text-muted-foreground truncate max-w-[120px]">{user.email}</p>
+          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
         </div>
       </div>
       
-      <div className="flex items-center justify-between">
-        <div>
-          {user.referralLevel === 'gold' ? (
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
-              Gold Level
-            </span>
-          ) : user.referralLevel === 'silver' ? (
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700/30 dark:text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 mr-1.5"></span>
-              Silver Level
-            </span>
-          ) : (
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mr-1.5"></span>
-              Bronze Level
-            </span>
-          )}
+      <div className="flex flex-col space-y-3">
+        <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${referralBadge.bg} ${referralBadge.textColor} w-fit`}>
+          {referralBadge.icon}
+          {referralBadge.label}
         </div>
         
-        <button 
-          className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-          onClick={handleLogout}
-          title="Logout"
-        >
-          <i className="ri-logout-box-r-line text-lg"></i>
-        </button>
+        <div className="flex justify-between items-center gap-2">
+          <Link href="/profile">
+            <Button variant="outline" size="sm" className="w-full justify-between text-xs glass-effect">
+              {t('sidebar.viewProfile')}
+              <ChevronRight className="h-3 w-3 ml-1" />
+            </Button>
+          </Link>
+          
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="text-muted-foreground hover:text-destructive hover:border-destructive/50 transition-colors"
+            onClick={handleLogout}
+            title={t('auth.logout')}
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

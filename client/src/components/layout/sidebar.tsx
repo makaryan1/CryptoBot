@@ -142,7 +142,7 @@ export default function Sidebar() {
                 label={t('sidebar.bots')}
                 href="/bots" 
                 active={location.startsWith("/bot")}
-                badge={user?.userBots?.length?.toString()}
+                badge={user?.id ? "0" : ""}
               />
               <NavItem 
                 icon={<Wallet className="h-4 w-4" />}
@@ -185,7 +185,7 @@ export default function Sidebar() {
                 label={t('sidebar.kyc')}
                 href="/kyc" 
                 active={location === "/kyc"}
-                highlight={user?.kyc?.length > 0 && user?.kyc[0]?.status === "verified" ? "success" : user?.kyc?.length > 0 && user?.kyc[0]?.status === "pending" ? "warning" : undefined}
+                highlight={undefined}
               />
               <NavItem 
                 icon={<Settings className="h-4 w-4" />}
