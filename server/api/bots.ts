@@ -74,6 +74,30 @@ export function setupBotRoutes(app: Express) {
       next(error);
     }
   });
+  
+  // Compatibility endpoint for the old path
+  app.get('/api/bots/user', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userBots = await storage.getUserBotsByUserId(req.user!.id);
+      
+      // Enrich with bot details
+      const enrichedBots = await Promise.all(userBots.map(async (userBot) => {
+        const bot = await storage.getBot(userBot.botId);
+        return {
+          ...userBot,
+          name: bot?.name || "Unknown Bot",
+          description: bot?.description || "",
+          icon: bot?.icon || "ri-robot-line",
+          riskLevel: bot?.riskLevel || "Unknown",
+          profitRange: bot?.profitRange || "0%"
+        };
+      }));
+      
+      res.json(enrichedBots);
+    } catch (error) {
+      next(error);
+    }
+  });
 
   // Launch a bot
   app.post('/api/bots/launch', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {

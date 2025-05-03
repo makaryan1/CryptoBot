@@ -12,13 +12,16 @@ import { Bot } from "@shared/schema";
 export default function BotDetailsPage() {
   const [location, setLocation] = useLocation();
   const params = useParams();
-  const botId = Number(params.id);
-  
-  const { availableBots, launchBot, isLoading } = useBots();
   const [bot, setBot] = useState<Bot | null>(null);
   
+  // Обеспечиваем безопасное преобразование ID
+  const botId = params.id ? parseInt(params.id) : null;
+  
+  const { availableBots, launchBot, isLoading } = useBots();
+  
   useEffect(() => {
-    if (!isLoading && availableBots.length > 0) {
+    if (!isLoading && availableBots.length > 0 && botId) {
+      console.log(`Looking for bot with ID: ${botId} among ${availableBots.length} bots`);
       const foundBot = availableBots.find(b => b.id === botId);
       setBot(foundBot || null);
     }
