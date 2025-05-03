@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { T } from "@/lib/i18n";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -32,16 +34,17 @@ export default function Header({ toggleSidebar, title, subtitle }: HeaderProps) 
           <h1 className="text-2xl font-bold text-dark">{title}</h1>
           {subtitle && <p className="text-neutral-400">{subtitle}</p>}
         </div>
-        <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 items-center">
+          <LanguageSwitcher />
           {location === "/" && (
             <>
               <button className="flex items-center justify-center px-4 py-2 rounded-md border border-primary text-primary hover:bg-blue-50 font-medium">
                 <i className="ri-wallet-3-line mr-2"></i>
-                Deposit
+                <T keyName="wallet.deposit" />
               </button>
               <button className="flex items-center justify-center px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 font-medium">
                 <i className="ri-robot-line mr-2"></i>
-                Launch Bot
+                <T keyName="bots.launch" />
               </button>
             </>
           )}

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { T } from "@/lib/i18n";
 
 export default function AvailableBots() {
   const { availableBots, launchBot, isLoading } = useBots();
@@ -38,15 +39,15 @@ export default function AvailableBots() {
       <Dialog open={showModal} onOpenChange={setShowModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Launch Bot</DialogTitle>
+            <DialogTitle><T keyName="bots.launch.modal.title" /></DialogTitle>
             <DialogDescription>
-              Enter the amount you want to invest in this bot
+              <T keyName="bots.launch.modal.description" />
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="investment" className="text-right">
-                Investment
+                <T keyName="bots.launch.modal.investment" />
               </Label>
               <Input
                 id="investment"
@@ -59,7 +60,7 @@ export default function AvailableBots() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="currency" className="text-right">
-                Currency
+                <T keyName="bots.launch.modal.currency" />
               </Label>
               <Input
                 id="currency"
@@ -71,15 +72,17 @@ export default function AvailableBots() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowModal(false)}>
-              Cancel
+              <T keyName="bots.launch.modal.cancel" />
             </Button>
-            <Button onClick={handleLaunchBot}>Launch</Button>
+            <Button onClick={handleLaunchBot}>
+              <T keyName="bots.launch.modal.launch" />
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold">Available Bots</h2>
+        <h2 className="text-lg font-bold"><T keyName="bots.available" /></h2>
         <div className="flex items-center">
           <div className="text-sm text-neutral-400">
             <span className="font-medium text-dark">{availableBots.length}</span> of 8 available
@@ -128,11 +131,11 @@ export default function AvailableBots() {
                 <div className="text-sm mb-3">
                   <div className="flex items-center mb-1">
                     <i className="ri-line-chart-line text-secondary mr-2"></i>
-                    <span>Avg. profit: {bot.profitRange} monthly</span>
+                    <span><T keyName="bots.profit" />: {bot.profitRange} monthly</span>
                   </div>
                   <div className="flex items-center">
                     <i className={`ri-funds-box-line text-${bot.riskLevel === 'High' || bot.riskLevel === 'Very High' ? 'error' : bot.riskLevel === 'Medium-High' || bot.riskLevel === 'Medium' ? 'primary' : 'accent'} mr-2`}></i>
-                    <span>Risk level: {bot.riskLevel}</span>
+                    <span><T keyName="bots.riskLevel" />: {bot.riskLevel}</span>
                   </div>
                 </div>
                 
@@ -140,7 +143,7 @@ export default function AvailableBots() {
                   className="w-full py-2 bg-primary text-white rounded-md hover:bg-primary/90 font-medium"
                   onClick={() => handleOpenModal(bot.id)}
                 >
-                  Launch Bot
+                  <T keyName="bots.launch" />
                 </button>
               </div>
             </div>
