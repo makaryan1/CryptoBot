@@ -52,7 +52,7 @@ export class DatabaseStorage implements IStorage {
   
   async updateUser(id: number, data: Partial<User>): Promise<User> {
     const [updatedUser] = await db.update(users)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(users.id, id))
       .returning();
       
@@ -79,7 +79,7 @@ export class DatabaseStorage implements IStorage {
   
   async updateKyc(id: number, data: Partial<Kyc>): Promise<Kyc> {
     const [updatedKyc] = await db.update(kyc)
-      .set({...data, updatedAt: new Date().toISOString()})
+      .set({...data, updatedAt: new Date()})
       .where(eq(kyc.id, id))
       .returning();
       
