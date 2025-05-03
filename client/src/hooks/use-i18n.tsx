@@ -41,6 +41,19 @@ const defaultTranslations: Translations = {
     'nav.referrals': 'Referrals',
     'nav.support': 'Support',
     
+    // Dashboard
+    'dashboard.welcomeBack': 'Welcome back, {name}!',
+    'dashboard.accountSummary': 'Account Summary',
+    'dashboard.totalBalance': 'Total Balance',
+    'dashboard.activeBots': 'Active Bots',
+    'dashboard.totalProfit': 'Total Profit',
+    'dashboard.depositFunds': 'Deposit Funds',
+    'dashboard.quickActions': 'Quick Actions',
+    'dashboard.startTrading': 'Start Trading',
+    'dashboard.viewTransactions': 'View Transactions',
+    'dashboard.completeVerification': 'Complete Verification',
+    'dashboard.inviteFriends': 'Invite Friends',
+    
     // Sidebar
     'sidebar.main': 'Main',
     'sidebar.dashboard': 'Dashboard',
@@ -102,11 +115,17 @@ const defaultTranslations: Translations = {
     'wallet.noTransactions': 'No transactions found',
     'wallet.viewAllTransactions': 'View All Transactions',
     
+    // KYC
+    'kyc.level': 'Level',
+    'kyc.completeLevel2': 'Complete Level 2 to unlock higher limits',
+    'kyc.accountVerified': 'Your account is fully verified',
+    
     // Bots
     'bots.available': 'Available Bots',
     'bots.profit': 'Avg. profit',
     'bots.riskLevel': 'Risk level',
     'bots.launch': 'Launch Bot',
+    'bots.of': 'of',
     'bots.launch.modal.title': 'Launch Bot',
     'bots.launch.modal.description': 'Enter the details to launch this trading bot',
     'bots.launch.modal.investment': 'Investment',
@@ -226,6 +245,19 @@ const defaultTranslations: Translations = {
     'nav.referrals': 'Рефералы',
     'nav.support': 'Поддержка',
     
+    // Dashboard
+    'dashboard.welcomeBack': 'С возвращением, {name}!',
+    'dashboard.accountSummary': 'Сводка аккаунта',
+    'dashboard.totalBalance': 'Общий баланс',
+    'dashboard.activeBots': 'Активные боты',
+    'dashboard.totalProfit': 'Общая прибыль',
+    'dashboard.depositFunds': 'Пополнить средства',
+    'dashboard.quickActions': 'Быстрые действия',
+    'dashboard.startTrading': 'Начать торговлю',
+    'dashboard.viewTransactions': 'Посмотреть транзакции',
+    'dashboard.completeVerification': 'Завершить верификацию',
+    'dashboard.inviteFriends': 'Пригласить друзей',
+    
     // Sidebar
     'sidebar.main': 'Главное',
     'sidebar.dashboard': 'Панель управления',
@@ -246,6 +278,11 @@ const defaultTranslations: Translations = {
     'sidebar.userManagement': 'Управление пользователями',
     'sidebar.kycManagement': 'Управление KYC',
     'sidebar.commissionSettings': 'Настройки комиссий',
+    
+    // KYC
+    'kyc.level': 'Уровень',
+    'kyc.completeLevel2': 'Пройдите верификацию Уровня 2 для увеличения лимитов',
+    'kyc.accountVerified': 'Ваш аккаунт полностью верифицирован',
     
     // Wallet
     'wallet.title': 'Кошелек',
@@ -292,6 +329,7 @@ const defaultTranslations: Translations = {
     'bots.profit': 'Средняя прибыль',
     'bots.riskLevel': 'Уровень риска',
     'bots.launch': 'Запустить бота',
+    'bots.of': 'из',
     'bots.launch.modal.title': 'Запуск бота',
     'bots.launch.modal.description': 'Введите данные для запуска торгового бота',
     'bots.launch.modal.investment': 'Инвестиция',
