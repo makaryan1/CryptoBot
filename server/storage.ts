@@ -79,6 +79,12 @@ export interface IStorage {
   // Referrals
   getReferrals(referrerId: number): Promise<User[]>;
   
+  // Exchange API Keys
+  getExchangeApiKey(id: number): Promise<ExchangeApiKey | undefined>;
+  getExchangeApiKeysByUserId(userId: number): Promise<ExchangeApiKey[]>;
+  createExchangeApiKey(apiKey: InsertExchangeApiKey): Promise<ExchangeApiKey>;
+  deleteExchangeApiKey(id: number): Promise<void>;
+  
   // Session store
   sessionStore: session.SessionStore;
 }
@@ -93,6 +99,7 @@ export class MemStorage implements IStorage {
   private supportTicketsData: Map<number, SupportTicket>;
   private supportMessagesData: Map<number, SupportMessage>;
   private notificationsData: Map<number, Notification>;
+  private exchangeApiKeysData: Map<number, ExchangeApiKey>;
   private settingsData: Settings | undefined;
   
   sessionStore: session.SessionStore;
@@ -106,6 +113,7 @@ export class MemStorage implements IStorage {
   private ticketIdCounter: number = 1;
   private messageIdCounter: number = 1;
   private notificationIdCounter: number = 1;
+  private exchangeApiKeyIdCounter: number = 1;
 
   constructor() {
     this.usersData = new Map();

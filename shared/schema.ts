@@ -133,6 +133,21 @@ export const settings = pgTable("settings", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Exchange API Keys schema
+export const exchangeApiKeys = pgTable("exchange_api_keys", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  exchange: text("exchange").notNull(),
+  apiKey: text("api_key").notNull(),
+  apiSecret: text("api_secret").notNull(),
+  description: text("description"),
+  testnetMode: boolean("testnet_mode").default(false),
+  permissions: jsonb("permissions").default([]),
+  lastUsed: timestamp("last_used"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many, one }) => ({
   wallets: many(wallets),
@@ -148,6 +163,14 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   }),
   kyc: many(kyc),
   notifications: many(notifications),
+  exchangeApiKeys: many(exchangeApiKeys),
+}));
+
+export const exchangeApiKeysRelations = relations(exchangeApiKeys, ({ one }) => ({
+  user: one(users, {
+    fields: [exchangeApiKeys.userId],
+    references: [users.id],
+  }),
 }));
 
 export const walletsRelations = relations(wallets, ({ one }) => ({
@@ -285,6 +308,15 @@ export const insertNotificationSchema = createInsertSchema(notifications).pick({
   userId: true,
 });
 
+export const insertExchangeApiKeySchema = createInsertSchema(exchangeApiKeys).pick({
+  userId: true,
+  exchange: true,
+  apiKey: true,
+  apiSecret: true,
+  description: true,
+  testnetMode: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -314,6 +346,9 @@ export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 
 export type Settings = typeof settings.$inferSelect;
+
+export type ExchangeApiKey = typeof exchangeApiKeys.$inferSelect;
+export type InsertExchangeApiKey = z.infer<typeof insertExchangeApiKeySchema>;
 
 // Extended schemas for frontend validation
 export const loginSchema = z.object({
