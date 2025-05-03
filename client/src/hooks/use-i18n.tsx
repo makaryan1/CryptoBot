@@ -14,6 +14,7 @@ const defaultTranslations: Translations = {
     'common.success': 'Success',
     'common.cancel': 'Cancel',
     'common.save': 'Save',
+    'common.saving': 'Saving...',
     'common.edit': 'Edit',
     'common.delete': 'Delete',
     'common.yes': 'Yes',
@@ -54,6 +55,14 @@ const defaultTranslations: Translations = {
     'dashboard.viewTransactions': 'View Transactions',
     'dashboard.completeVerification': 'Complete Verification',
     'dashboard.inviteFriends': 'Invite Friends',
+    'dashboard.botPerformance': 'Bot Performance',
+    'dashboard.chartsComingSoon': 'Performance charts coming soon',
+    'dashboard.connectExchange': 'Connect Exchange API',
+    'dashboard.connectExchangeDescription': 'Connect your exchange API to enable live trading with your bots',
+    'dashboard.addToWallet': 'Add funds to your wallet',
+    'dashboard.launchBot': 'Launch a trading bot',
+    'dashboard.unlockFeatures': 'Unlock all features',
+    'dashboard.connectApi': 'Connect API',
     
     // Sidebar
     'sidebar.main': 'Main',
@@ -259,6 +268,14 @@ const defaultTranslations: Translations = {
     'dashboard.viewTransactions': 'Посмотреть транзакции',
     'dashboard.completeVerification': 'Завершить верификацию',
     'dashboard.inviteFriends': 'Пригласить друзей',
+    'dashboard.botPerformance': 'Производительность ботов',
+    'dashboard.chartsComingSoon': 'Графики производительности скоро появятся',
+    'dashboard.connectExchange': 'Подключение API биржи',
+    'dashboard.connectExchangeDescription': 'Подключите API вашей биржи для запуска торговли ботами',
+    'dashboard.addToWallet': 'Добавить средства в кошелек',
+    'dashboard.launchBot': 'Запустить торгового бота',
+    'dashboard.unlockFeatures': 'Разблокировать все функции',
+    'dashboard.connectApi': 'Подключить API',
     
     // Sidebar
     'sidebar.main': 'Главное',
