@@ -272,6 +272,7 @@ const defaultTranslations: Translations = {
     'bots.maxDuration': 'Максимальная длительность',
     'bots.maxDurationDescription': 'Автоматически останавливать бота после указанного количества дней',
     'bots.days': 'дней',
+    'bots.available': 'Доступно',
   }
 };
 

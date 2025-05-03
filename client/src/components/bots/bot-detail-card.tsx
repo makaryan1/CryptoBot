@@ -137,7 +137,7 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
   return (
     <>
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle><T keyName="bots.launch.modal.title" /></DialogTitle>
             <DialogDescription>
@@ -227,20 +227,23 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
             </div>
             
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <input 
-                  type="checkbox" 
-                  id="useAdvancedSettings" 
-                  checked={useAdvancedSettings}
-                  onChange={(e) => setUseAdvancedSettings(e.target.checked)}
-                  className="rounded border-gray-300 text-primary focus:ring-primary"
-                />
-                <Label htmlFor="useAdvancedSettings" className="font-medium text-sm">
-                  <T keyName="bots.useAdvancedSettings" />
-                </Label>
+              <div className="flex justify-between items-center">
+                <h4 className="text-sm font-medium"><T keyName="bots.advancedSettings" /></h4>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="useAdvancedSettings" className="text-sm text-neutral-600 cursor-pointer">
+                    <T keyName="bots.useAdvancedSettings" />
+                  </Label>
+                  <input 
+                    type="checkbox" 
+                    id="useAdvancedSettings" 
+                    checked={useAdvancedSettings}
+                    onChange={(e) => setUseAdvancedSettings(e.target.checked)}
+                    className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
+                  />
+                </div>
               </div>
               
-              {useAdvancedSettings && (
+              {useAdvancedSettings ? (
                 <div className="bg-muted/50 p-4 rounded-lg space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="stopLoss" className="text-sm">
@@ -305,6 +308,26 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
                     </div>
                     <p className="text-xs text-muted-foreground">
                       <T keyName="bots.maxDurationDescription" />
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-neutral-600"><T keyName="bots.stopLoss" /></span>
+                      <span className="text-sm font-medium text-primary"><T keyName="bots.available" /></span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-neutral-600"><T keyName="bots.takeProfit" /></span>
+                      <span className="text-sm font-medium text-primary"><T keyName="bots.available" /></span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-neutral-600"><T keyName="bots.maxDuration" /></span>
+                      <span className="text-sm font-medium text-primary"><T keyName="bots.available" /></span>
+                    </div>
+                    <p className="text-xs text-neutral-500 mt-2">
+                      <T keyName="bots.availableAfterLaunch" />
                     </p>
                   </div>
                 </div>
