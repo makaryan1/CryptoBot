@@ -137,10 +137,10 @@ export function useBots() {
   };
   
   // Calculate running time for user bots
-  const calculateRunningTime = (startedAt: string | null): string => {
+  const calculateRunningTime = (startedAt: Date | string | null): string => {
     if (!startedAt) return "0d 0h";
     
-    const started = new Date(startedAt);
+    const started = startedAt instanceof Date ? startedAt : new Date(startedAt);
     const now = new Date();
     const diffMs = now.getTime() - started.getTime();
     
