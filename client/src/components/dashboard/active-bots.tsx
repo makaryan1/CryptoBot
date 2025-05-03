@@ -1,10 +1,12 @@
 import { Link } from "wouter";
 import { useBots } from "@/hooks/use-bots";
+import { useI18n } from "@/hooks/use-i18n";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function ActiveBots() {
+  const { t } = useI18n();
   const { activeBots, stopBot, isLoading } = useBots();
   
   const handleStopBot = (botId: number) => {
@@ -14,12 +16,10 @@ export default function ActiveBots() {
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold">Active Trading Bots</h2>
-        <Link href="/bots">
-          <a className="text-primary text-sm font-medium flex items-center hover:underline">
-            View All
-            <i className="ri-arrow-right-line ml-1 text-xs"></i>
-          </a>
+        <h2 className="text-lg font-bold">{t('bots.activeBots')}</h2>
+        <Link href="/bots" className="text-primary text-sm font-medium flex items-center hover:underline">
+          {t('common.viewAll')}
+          <i className="ri-arrow-right-line ml-1 text-xs"></i>
         </Link>
       </div>
       

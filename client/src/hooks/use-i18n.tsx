@@ -18,6 +18,7 @@ const defaultTranslations: Translations = {
     'common.delete': 'Delete',
     'common.yes': 'Yes',
     'common.no': 'No',
+    'common.viewAll': 'View All',
     
     // Auth
     'auth.login': 'Login',

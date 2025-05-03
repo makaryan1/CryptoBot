@@ -24,6 +24,7 @@ import { ProtectedRoute } from "./lib/protected-route";
 import { AdminRoute } from "./lib/admin-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { NotificationModalProvider } from "@/components/common/notification-modal";
+import { I18nProvider } from "@/hooks/use-i18n";
 
 const BotDetailsPage = lazy(() => import("@/pages/bot-details-page"));
 
@@ -61,15 +62,21 @@ function Router() {
 }
 
 function App() {
+  // Определить начальную локаль из localStorage или использовать 'ru' по умолчанию
+  const savedLocale = localStorage.getItem('locale');
+  const initialLocale = savedLocale || 'ru';
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <AuthProvider>
-          <NotificationModalProvider>
-            <Toaster />
-            <Router />
-          </NotificationModalProvider>
-        </AuthProvider>
+        <I18nProvider initialLocale={initialLocale}>
+          <AuthProvider>
+            <NotificationModalProvider>
+              <Toaster />
+              <Router />
+            </NotificationModalProvider>
+          </AuthProvider>
+        </I18nProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
