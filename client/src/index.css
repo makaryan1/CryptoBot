@@ -98,4 +98,48 @@
   .animated-gradient-bg {
     @apply bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 dark:from-primary/10 dark:via-accent/10 dark:to-primary/10 bg-size-200 animate-gradient-slow;
   }
+  
+  .bg-size-200 {
+    background-size: 200% 200%;
+  }
+  
+  .animate-gradient-slow {
+    animation: gradient 8s ease infinite;
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .card-blur-effect {
+    @apply relative overflow-hidden;
+  }
+  
+  .card-blur-effect::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: -20%;
+    width: 140%;
+    height: 140%;
+    background: radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
+    opacity: 0.1;
+    filter: blur(40px);
+    transform: translateZ(0);
+    z-index: -1;
+    transition: all 0.5s ease;
+  }
+  
+  .card-blur-effect:hover::before {
+    opacity: 0.15;
+    filter: blur(50px);
+  }
 }
