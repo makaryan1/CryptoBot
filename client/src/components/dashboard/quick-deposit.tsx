@@ -1,91 +1,133 @@
-import { useState } from "react";
-import { useWallet } from "@/hooks/use-wallet";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { TokenSelector } from "@/components/wallet/token-selector";
+import { NetworkSelector } from "@/components/wallet/network-selector";
+import { QRCodeAddress } from "@/components/wallet/qr-code-address";
+import { getTokenById, getNetworkById } from "@shared/tokens";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { T } from "@/lib/i18n";
 
 export default function QuickDeposit() {
-  const { supportedCurrencies, generateDepositAddress, depositAddress, isLoading } = useWallet();
-  const [selectedCurrency, setSelectedCurrency] = useState("USDT (TRC20)");
+  const [selectedTokenId, setSelectedTokenId] = useState("usdt");
+  const [selectedNetworkId, setSelectedNetworkId] = useState("tron");
   const { toast } = useToast();
+
+  // Получение данных о кошельках пользователя
+  const { data: wallets = [], isLoading: isLoadingWallets } = useQuery({
+    queryKey: ["/api/wallets"],
+  });
   
-  const handleCurrencyChange = (value: string) => {
-    setSelectedCurrency(value);
-    generateDepositAddress(value);
+  // Мутация для создания адреса депозита, если его нет
+  const createDepositAddressMutation = useMutation({
+    mutationFn: async ({ currency, network }: { currency: string, network: string }) => {
+      const res = await apiRequest("POST", "/api/wallets/generate-address", { currency, network });
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/wallets"] });
+      toast({
+        title: "Address generated",
+        description: "Your deposit address has been generated",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Получение выбранного токена и сети
+  const selectedToken = getTokenById(selectedTokenId);
+  const selectedNetwork = getNetworkById(selectedNetworkId);
+  
+  // Найти кошелек для выбранной валюты
+  const findWallet = () => {
+    if (!wallets.length || !selectedToken) return null;
+    return wallets.find((wallet) => wallet.currency === selectedToken.symbol);
   };
   
-  const copyToClipboard = () => {
-    if (depositAddress) {
-      navigator.clipboard.writeText(depositAddress);
-      toast({
-        title: "Address copied",
-        description: "Deposit address copied to clipboard",
+  const currentWallet = findWallet();
+  
+  // Получение адреса для депозита при изменении выбранной валюты или сети
+  useEffect(() => {
+    // Проверяем, есть ли уже кошелек для этой валюты
+    const wallet = findWallet();
+    
+    // Если кошелька нет, или нет адреса - создаем новый адрес
+    if (selectedToken && selectedNetwork && (!wallet || !wallet.address)) {
+      createDepositAddressMutation.mutate({
+        currency: selectedToken.symbol,
+        network: selectedNetwork.id
       });
     }
-  };
+  }, [selectedTokenId, selectedNetworkId]);
   
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-neutral-200 overflow-hidden">
-      <div className="p-4 border-b border-neutral-200">
-        <h2 className="font-bold">Quick Deposit</h2>
-      </div>
-      <div className="p-4">
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Select Cryptocurrency</label>
-          <div className="relative">
-            <Select onValueChange={handleCurrencyChange} defaultValue={selectedCurrency}>
-              <SelectTrigger className="w-full p-2.5 border border-neutral-200 rounded-md">
-                <SelectValue placeholder="Select currency" />
-              </SelectTrigger>
-              <SelectContent>
-                {supportedCurrencies.map((currency) => (
-                  <SelectItem key={currency} value={currency}>
-                    {currency}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Your Deposit Address</label>
-          <div className="flex">
-            <div className="flex-grow relative">
-              <Input
-                type="text"
-                value={depositAddress || ""}
-                readOnly
-                className="crypto-address w-full p-2.5 border border-neutral-200 rounded-l-md bg-gray-50 text-neutral-400"
+    <Card>
+      <CardHeader>
+        <CardTitle><T keyName="wallet.depositFunds" /></CardTitle>
+        <CardDescription><T keyName="wallet.depositDescription" /></CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <div>
+              <Label className="mb-2 block"><T keyName="wallet.selectAsset" /></Label>
+              <TokenSelector
+                value={selectedTokenId}
+                onChange={setSelectedTokenId}
+                popularOnly={true}
               />
             </div>
-            <Button
-              className="flex items-center justify-center p-2.5 bg-primary text-white rounded-r-md"
-              onClick={copyToClipboard}
-              disabled={!depositAddress}
-            >
-              <i className="ri-file-copy-line"></i>
-            </Button>
-          </div>
-          <p className="text-xs text-neutral-400 mt-1">Send only {selectedCurrency} to this address</p>
-        </div>
-        
-        <div className="flex items-center justify-center p-6">
-          <div className="w-32 h-32 bg-white border border-neutral-200 rounded-md flex items-center justify-center">
-            {depositAddress ? (
-              <img 
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${depositAddress}`}
-                alt="QR Code"
-                className="w-28 h-28"
-              />
-            ) : (
-              <div className="text-neutral-400 text-sm">Select currency</div>
+            
+            {selectedToken && (
+              <div>
+                <Label className="mb-2 block"><T keyName="wallet.selectNetwork" /></Label>
+                <NetworkSelector
+                  tokenId={selectedTokenId}
+                  value={selectedNetworkId}
+                  onChange={setSelectedNetworkId}
+                />
+              </div>
             )}
           </div>
+          
+          {selectedToken && selectedNetwork && (
+            <>
+              {createDepositAddressMutation.isPending ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="w-8 h-8 border-4 border-t-blue-500 border-b-blue-500 rounded-full animate-spin"></div>
+                  <span className="ml-2"><T keyName="wallet.generatingAddress" /></span>
+                </div>
+              ) : currentWallet && currentWallet.address ? (
+                <QRCodeAddress
+                  token={selectedToken}
+                  network={selectedNetwork}
+                  address={currentWallet.address}
+                  walletId={currentWallet.id}
+                />
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-neutral-500 mb-4"><T keyName="wallet.noAddressYet" /></p>
+                  <Button onClick={() => createDepositAddressMutation.mutate({
+                    currency: selectedToken.symbol,
+                    network: selectedNetwork.id
+                  })}>
+                    <T keyName="wallet.generateAddress" />
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

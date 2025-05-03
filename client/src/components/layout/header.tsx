@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import LanguageSwitcher from "@/components/language-switcher";
 import { T } from "@/lib/i18n";
 
 interface HeaderProps {

@@ -1,8 +1,10 @@
+import { lazy, Suspense } from "react";
 import { Switch, Route } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Loader2 } from "lucide-react";
 import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import AuthPage from "@/pages/auth-page";
@@ -23,6 +25,8 @@ import { AdminRoute } from "./lib/admin-route";
 import { AuthProvider } from "@/hooks/use-auth";
 import { NotificationModalProvider } from "@/components/common/notification-modal";
 
+const BotDetailsPage = lazy(() => import("@/pages/bot-details-page"));
+
 function Router() {
   return (
     <Switch>
@@ -31,6 +35,11 @@ function Router() {
       {/* Protected Routes */}
       <ProtectedRoute path="/" component={Dashboard} />
       <ProtectedRoute path="/bots" component={BotsPage} />
+      <ProtectedRoute path="/bots/:id" component={() => (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+          <BotDetailsPage />
+        </Suspense>
+      )} />
       <ProtectedRoute path="/wallet" component={WalletPage} />
       <ProtectedRoute path="/kyc" component={KycPage} />
       <ProtectedRoute path="/transactions" component={TransactionsPage} />
