@@ -1,26 +1,69 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
+import { useI18n, T } from "@/lib/i18n";
 import UserProfile from "./user-profile";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { 
+  LayoutDashboard, 
+  Robot, 
+  Wallet, 
+  BarChart3,
+  Users, 
+  User, 
+  Shield, 
+  Settings, 
+  HelpCircle, 
+  MessagesSquare,
+  Menu,
+  X,
+  ChevronRight
+} from "lucide-react";
 
 interface NavItemProps {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   href: string;
   active: boolean;
+  badge?: string;
+  highlight?: "primary" | "success" | "warning" | "destructive";
+  adminItem?: boolean;
 }
 
-const NavItem = ({ icon, label, href, active }: NavItemProps) => {
+const NavItem = ({ icon, label, href, active, badge, highlight, adminItem }: NavItemProps) => {
+  const highlightColor = highlight ? `text-${highlight}` : 'text-primary';
+
   return (
     <li>
       <Link href={href}>
-        <div className={`flex items-center transition-all duration-200 ${
-          active 
-            ? 'text-primary bg-primary/10 font-medium border-l-4 border-primary pl-[0.625rem]' 
-            : 'text-muted-foreground hover:text-foreground hover:bg-muted border-l-4 border-transparent pl-[0.625rem]'
-          } rounded-md py-2.5 pr-3 cursor-pointer`}>
-          <i className={`${icon} mr-3 text-lg ${active ? 'text-primary' : ''}`}></i>
-          <span>{label}</span>
+        <div 
+          className={`flex items-center justify-between group transition-all duration-200 ${
+            active 
+              ? `text-foreground bg-${adminItem ? 'destructive' : 'primary'}/10 font-medium border-l-4 ${adminItem ? 'border-destructive' : 'border-primary'} rounded-r-md pl-3`
+              : 'text-muted-foreground hover:text-foreground hover:bg-muted/60 border-l-4 border-transparent pl-4 rounded-md'
+            } py-2.5 pr-3 cursor-pointer`
+          }
+        >
+          <div className="flex items-center">
+            <span className={`mr-3 ${active ? highlightColor : 'text-muted-foreground group-hover:text-foreground'}`}>
+              {icon}
+            </span>
+            <span className="text-sm font-medium">{label}</span>
+          </div>
+          
+          {badge && (
+            <Badge 
+              variant={active ? "default" : "outline"} 
+              className={`ml-2 px-1.5 py-0 text-xs ${active ? 'bg-primary text-primary-foreground' : ''}`}
+            >
+              {badge}
+            </Badge>
+          )}
+          
+          {!badge && (
+            <ChevronRight className={`h-4 w-4 opacity-0 group-hover:opacity-100 transition-all ${active ? 'opacity-100' : ''}`} />
+          )}
         </div>
       </Link>
     </li>

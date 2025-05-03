@@ -3,47 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --background: 210 40% 98%;
-  --foreground: 222 47% 11%;
-  --muted: 210 40% 93%;
-  --muted-foreground: 215 25% 40%;
+  --background: 215 25% 98%;
+  --foreground: 217 33% 17%;
+  --muted: 214 32% 95%;
+  --muted-foreground: 217 27% 50%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: 217 33% 17%;
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 217 33% 17%;
   --border: 214 32% 91%;
   --input: 214 32% 91%;
   --primary: 221 83% 53%;
   --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
-  --accent: 221 83% 53%;
+  --secondary: 214 32% 91%;
+  --secondary-foreground: 217 33% 17%;
+  --accent: 199 89% 48%;
   --accent-foreground: 210 40% 98%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 210 40% 98%;
+  --success: 142 72% 45%;
+  --success-foreground: 210 40% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 217 33% 17%;
   --ring: 221 83% 53%;
   --radius: 0.75rem;
 }
   .dark {
-  --background: 222 47% 11%;
+  --background: 217 33% 12%;
   --foreground: 210 40% 98%;
-  --muted: 217 33% 17%;
+  --muted: 217 32% 25%;
   --muted-foreground: 215 20% 65%;
-  --popover: 222 47% 11%;
+  --popover: 217 33% 17%;
   --popover-foreground: 210 40% 98%;
-  --card: 222 47% 11%;
+  --card: 217 33% 17%;
   --card-foreground: 210 40% 98%;
   --border: 217 33% 17%;
   --input: 217 33% 17%;
   --primary: 221 83% 53%;
   --primary-foreground: 210 40% 98%;
-  --secondary: 217 33% 17%;
+  --secondary: 217 32% 25%;
   --secondary-foreground: 210 40% 98%;
-  --accent: 221 83% 53%;
+  --accent: 199 89% 48%;
   --accent-foreground: 210 40% 98%;
-  --destructive: 0 63% 31%;
+  --destructive: 0 72% 51%;
   --destructive-foreground: 210 40% 98%;
-  --ring: 224 76% 48%;
+  --success: 142 72% 35%;
+  --success-foreground: 210 40% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 217 33% 17%;
+  --ring: 221 83% 53%;
   --radius: 0.75rem;
 }
 
@@ -54,5 +62,40 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50;
+  }
+  
+  .gradient-heading {
+    @apply bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent font-bold;
+  }
+  
+  .dashboard-section {
+    @apply rounded-xl border bg-card p-6 shadow-sm;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-md hover:border-primary/30;
+  }
+  
+  .subtle-gradient {
+    @apply bg-gradient-to-tr from-slate-50 to-white dark:from-slate-900 dark:to-slate-800;
+  }
+  
+  .button-gradient {
+    @apply bg-gradient-to-r from-primary to-accent text-white hover:shadow-lg hover:shadow-primary/20 dark:hover:shadow-accent/20 transition-all duration-300;
+  }
+  
+  .stat-card {
+    @apply bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-xl p-4 border shadow-sm hover:shadow-md transition-all duration-300;
+  }
+  
+  .animated-gradient-bg {
+    @apply bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 dark:from-primary/10 dark:via-accent/10 dark:to-primary/10 bg-size-200 animate-gradient-slow;
   }
 }
