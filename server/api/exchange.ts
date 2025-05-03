@@ -1,234 +1,227 @@
 import { Router } from "express";
-import { z } from "zod";
 import { storage } from "../storage";
-import { log } from "../vite";
-import { exchangeApiKeys } from "@shared/schema";
+import { insertExchangeApiKeySchema } from "@shared/schema";
+import * as crypto from "crypto";
 
 const router = Router();
 
-// Схема валидации для API ключа
-const apiKeySchema = z.object({
-  exchange: z.string(),
-  apiKey: z.string(),
-  apiSecret: z.string(),
-  description: z.string().optional(),
-  testnetMode: z.boolean().optional(),
-});
-
-// Получение всех API ключей пользователя
-router.get("/api-keys", async (req, res) => {
+// Middleware to ensure user is authenticated
+const ensureAuthenticated = (req, res, next) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "Unauthorized" });
   }
+  next();
+};
 
+// GET /api/exchange/api-keys - Get all API keys for current user
+router.get("/api-keys", ensureAuthenticated, async (req, res) => {
   try {
-    const userApiKeys = await storage.getExchangeApiKeysByUserId(req.user.id);
-    // Не возвращаем секретный ключ на клиент
-    const safeApiKeys = userApiKeys.map(key => ({
-      ...key,
-      apiSecret: undefined
+    // Получение всех API ключей пользователя
+    const keys = await storage.getExchangeApiKeysByUserId(req.user.id);
+    
+    // Маскируем секретные данные перед отправкой клиенту
+    const safeKeys = keys.map(key => ({
+      id: key.id,
+      exchange: key.exchange,
+      apiKey: maskApiKey(key.apiKey),
+      description: key.description,
+      permissions: key.permissions,
+      testnetMode: key.testnetMode,
+      createdAt: key.createdAt,
+      updatedAt: key.updatedAt,
+      lastUsed: key.lastUsed,
     }));
     
-    res.json(safeApiKeys);
+    return res.status(200).json(safeKeys);
   } catch (error) {
-    log(`Error fetching API keys: ${error}`, "exchange-api");
-    res.status(500).json({ error: "Failed to fetch API keys" });
+    console.error("Error fetching API keys:", error);
+    return res.status(500).json({ error: "Failed to fetch API keys" });
   }
 });
 
-// Добавление нового API ключа
-router.post("/api-keys", async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
+// POST /api/exchange/api-keys - Create a new API key
+router.post("/api-keys", ensureAuthenticated, async (req, res) => {
   try {
-    const validatedData = apiKeySchema.parse(req.body);
-    
-    // Добавляем userId к данным
-    const apiKeyData = {
-      ...validatedData,
+    // Валидируем входные данные с использованием Zod схемы
+    const validatedData = insertExchangeApiKeySchema.parse({
+      ...req.body,
       userId: req.user.id,
-    };
-
-    // Создаем API ключ в базе данных
-    const apiKey = await storage.createExchangeApiKey(apiKeyData);
-    
-    // Не возвращаем секретный ключ на клиент
-    const safeApiKey = {
-      ...apiKey,
-      apiSecret: undefined
-    };
-    
-    res.status(201).json(safeApiKey);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors });
-    }
-    
-    log(`Error creating API key: ${error}`, "exchange-api");
-    res.status(500).json({ error: "Failed to create API key" });
-  }
-});
-
-// Удаление API ключа
-router.delete("/api-keys/:id", async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const apiKeyId = parseInt(req.params.id);
-    
-    // Проверяем, что API ключ принадлежит текущему пользователю
-    const apiKey = await storage.getExchangeApiKey(apiKeyId);
-    
-    if (!apiKey) {
-      return res.status(404).json({ error: "API key not found" });
-    }
-    
-    if (apiKey.userId !== req.user.id) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-    
-    // Удаляем API ключ
-    await storage.deleteExchangeApiKey(apiKeyId);
-    
-    res.status(200).json({ success: true });
-  } catch (error) {
-    log(`Error deleting API key: ${error}`, "exchange-api");
-    res.status(500).json({ error: "Failed to delete API key" });
-  }
-});
-
-// Тестирование подключения к бирже
-router.post("/test-api-key", async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const validatedData = apiKeySchema.parse(req.body);
-    
-    // Тестируем подключение в зависимости от биржи
-    switch (validatedData.exchange) {
-      case "binance":
-        // Имитация успешного тестирования API Binance
-        // В реальном проекте здесь будет код, который проверяет подключение к API Binance
-        res.json({ success: true, exchange: "binance", permissions: ["spot", "futures"] });
-        break;
-        
-      case "bybit":
-        // Имитация успешного тестирования API Bybit
-        res.json({ success: true, exchange: "bybit", permissions: ["spot"] });
-        break;
-        
-      case "okx":
-        // Имитация успешного тестирования API OKX
-        res.json({ success: true, exchange: "okx", permissions: ["spot", "futures"] });
-        break;
-        
-      default:
-        // Для остальных бирж просто возвращаем успешный результат
-        res.json({ success: true, exchange: validatedData.exchange });
-    }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors });
-    }
-    
-    log(`Error testing API key: ${error}`, "exchange-api");
-    res.status(500).json({ error: "Failed to test API key" });
-  }
-});
-
-// Получение балансов с биржи
-router.get("/balances/:exchangeId", async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  try {
-    const exchangeId = parseInt(req.params.exchangeId);
-    
-    // Проверяем, что API ключ принадлежит текущему пользователю
-    const apiKey = await storage.getExchangeApiKey(exchangeId);
-    
-    if (!apiKey) {
-      return res.status(404).json({ error: "API key not found" });
-    }
-    
-    if (apiKey.userId !== req.user.id) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-    
-    // В реальном проекте здесь будет код для получения балансов с биржи
-    // Имитация ответа с балансами
-    const balances = [
-      { asset: "BTC", free: 0.01243, locked: 0.0 },
-      { asset: "ETH", free: 0.4512, locked: 0.0 },
-      { asset: "USDT", free: 1245.78, locked: 50.0 },
-    ];
-    
-    res.json(balances);
-  } catch (error) {
-    log(`Error fetching balances: ${error}`, "exchange-api");
-    res.status(500).json({ error: "Failed to fetch balances" });
-  }
-});
-
-// Размещение ордера через биржу
-router.post("/order", async (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  try {
-    // Валидация данных ордера
-    const orderSchema = z.object({
-      exchangeId: z.number(),
-      symbol: z.string(),
-      side: z.enum(["BUY", "SELL"]),
-      type: z.enum(["LIMIT", "MARKET"]),
-      quantity: z.number().positive(),
-      price: z.number().positive().optional(),
     });
     
-    const validatedData = orderSchema.parse(req.body);
+    // Проверяем количество уже существующих ключей для этой биржи
+    const existingKeys = await storage.getExchangeApiKeysByUserId(req.user.id);
+    const sameExchangeKeys = existingKeys.filter(key => key.exchange === validatedData.exchange);
     
-    // Проверяем, что API ключ принадлежит текущему пользователю
-    const apiKey = await storage.getExchangeApiKey(validatedData.exchangeId);
+    if (sameExchangeKeys.length >= 3) {
+      return res.status(400).json({ error: "You can only have up to 3 API keys per exchange" });
+    }
     
-    if (!apiKey) {
+    // Создаем новый API ключ
+    const apiKey = await storage.createExchangeApiKey(validatedData);
+    
+    // Маскируем секретные данные перед отправкой клиенту
+    const safeKey = {
+      ...apiKey,
+      apiKey: maskApiKey(apiKey.apiKey),
+      apiSecret: undefined, // Не отправляем секрет обратно клиенту
+    };
+    
+    return res.status(201).json(safeKey);
+  } catch (error) {
+    console.error("Error creating API key:", error);
+    if (error.name === "ZodError") {
+      return res.status(400).json({ error: "Invalid API key data", details: error.errors });
+    }
+    return res.status(500).json({ error: "Failed to create API key" });
+  }
+});
+
+// DELETE /api/exchange/api-keys/:id - Delete an API key
+router.delete("/api-keys/:id", ensureAuthenticated, async (req, res) => {
+  try {
+    const keyId = parseInt(req.params.id);
+    if (isNaN(keyId)) {
+      return res.status(400).json({ error: "Invalid API key ID" });
+    }
+    
+    // Убедимся, что ключ принадлежит этому пользователю
+    const key = await storage.getExchangeApiKey(keyId);
+    if (!key) {
       return res.status(404).json({ error: "API key not found" });
     }
     
-    if (apiKey.userId !== req.user.id) {
-      return res.status(403).json({ error: "Forbidden" });
+    if (key.userId !== req.user.id) {
+      return res.status(403).json({ error: "You don't have permission to delete this API key" });
     }
     
-    // В реальном проекте здесь будет код для размещения ордера на бирже
-    // Имитация успешно размещенного ордера
-    const order = {
-      orderId: Math.floor(Math.random() * 1000000),
-      symbol: validatedData.symbol,
-      side: validatedData.side,
-      type: validatedData.type,
-      quantity: validatedData.quantity,
-      price: validatedData.price,
-      status: "FILLED",
-      transactionTime: Date.now(),
-    };
+    // Удаляем ключ
+    await storage.deleteExchangeApiKey(keyId);
     
-    res.status(201).json(order);
+    return res.status(200).json({ success: true });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({ error: error.errors });
-    }
-    
-    log(`Error placing order: ${error}`, "exchange-api");
-    res.status(500).json({ error: "Failed to place order" });
+    console.error("Error deleting API key:", error);
+    return res.status(500).json({ error: "Failed to delete API key" });
   }
 });
+
+// POST /api/exchange/test-api-key - Test API key connection
+router.post("/test-api-key", ensureAuthenticated, async (req, res) => {
+  try {
+    const { exchange, apiKey, apiSecret, testnetMode } = req.body;
+    
+    if (!exchange || !apiKey || !apiSecret) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+    
+    // В реальном приложении здесь будет код для проверки подключения к бирже
+    // Сейчас просто симулируем проверку с задержкой
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    
+    // Проверим правильность формата ключа (должен быть минимум 10 символов)
+    if (apiKey.length < 10) {
+      return res.status(400).json({ error: "Invalid API key format" });
+    }
+    
+    // Проверим правильность формата секрета (должен быть минимум 20 символов)
+    if (apiSecret.length < 20) {
+      return res.status(400).json({ error: "Invalid API secret format" });
+    }
+    
+    // Здесь можно было бы добавить специфичные проверки для разных бирж
+    let permissions = [];
+    
+    switch (exchange) {
+      case 'binance':
+        permissions = ["READ_INFO", "SPOT_TRADING"];
+        break;
+      case 'bybit':
+        permissions = ["API_WALLET", "API_POSITION", "API_ORDER"];
+        break;
+      case 'okx':
+        permissions = ["read", "trade"];
+        break;
+      default:
+        permissions = ["read_only"];
+    }
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: "API key successfully verified",
+      permissions 
+    });
+  } catch (error) {
+    console.error("Error testing API key:", error);
+    return res.status(500).json({ error: "Failed to test API key" });
+  }
+});
+
+// Получение баланса кошелька пользователя на бирже
+router.get("/balance/:exchange", ensureAuthenticated, async (req, res) => {
+  try {
+    const exchangeName = req.params.exchange;
+    if (!exchangeName) {
+      return res.status(400).json({ error: "Exchange name is required" });
+    }
+    
+    // Проверяем, есть ли у пользователя API ключи для данной биржи
+    const apiKeys = await storage.getExchangeApiKeysByUserId(req.user.id);
+    const exchangeKey = apiKeys.find(key => key.exchange === exchangeName);
+    
+    if (!exchangeKey) {
+      return res.status(404).json({ error: "No API key found for this exchange" });
+    }
+    
+    // В реальном приложении здесь будет код для получения баланса с биржи
+    // Сейчас возвращаем фиктивные данные
+    const mockBalance = [
+      { asset: "BTC", free: 0.05, locked: 0.01, total: 0.06 },
+      { asset: "ETH", free: 1.5, locked: 0.2, total: 1.7 },
+      { asset: "USDT", free: 1200, locked: 800, total: 2000 }
+    ];
+    
+    return res.status(200).json(mockBalance);
+  } catch (error) {
+    console.error("Error fetching exchange balance:", error);
+    return res.status(500).json({ error: "Failed to fetch balance from exchange" });
+  }
+});
+
+// Получение открытых ордеров на бирже
+router.get("/orders/:exchange", ensureAuthenticated, async (req, res) => {
+  try {
+    const exchangeName = req.params.exchange;
+    if (!exchangeName) {
+      return res.status(400).json({ error: "Exchange name is required" });
+    }
+    
+    // Проверяем, есть ли у пользователя API ключи для данной биржи
+    const apiKeys = await storage.getExchangeApiKeysByUserId(req.user.id);
+    const exchangeKey = apiKeys.find(key => key.exchange === exchangeName);
+    
+    if (!exchangeKey) {
+      return res.status(404).json({ error: "No API key found for this exchange" });
+    }
+    
+    // В реальном приложении здесь будет код для получения ордеров с биржи
+    // Сейчас возвращаем фиктивные данные
+    const mockOrders = [];
+    
+    return res.status(200).json(mockOrders);
+  } catch (error) {
+    console.error("Error fetching exchange orders:", error);
+    return res.status(500).json({ error: "Failed to fetch orders from exchange" });
+  }
+});
+
+// Вспомогательная функция для маскирования API ключа
+function maskApiKey(apiKey: string): string {
+  if (!apiKey || apiKey.length < 8) return "***";
+  
+  const firstFour = apiKey.slice(0, 4);
+  const lastFour = apiKey.slice(-4);
+  const maskedPart = "*".repeat(apiKey.length - 8);
+  
+  return `${firstFour}${maskedPart}${lastFour}`;
+}
 
 export default router;

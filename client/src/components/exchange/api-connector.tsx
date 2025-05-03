@@ -112,7 +112,6 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
       toast({
         title: t("exchange.apiTestSuccess"),
         description: t("exchange.apiTestSuccessDescription"),
-        variant: "success",
       });
     },
     onError: (error: Error) => {
@@ -135,7 +134,6 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
       toast({
         title: t("exchange.apiRemoved"),
         description: t("exchange.apiRemovedSuccess"),
-        variant: "success",
       });
     },
     onError: (error: Error) => {
@@ -276,7 +274,7 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
                       alt={getSelectedExchangeDetails()?.name} 
                     />
                   )}
-                  {t("exchange.connectToExchange", { exchange: getSelectedExchangeDetails()?.name })}
+                  {t("exchange.connectToExchange", { exchange: getSelectedExchangeDetails()?.name || "" })}
                 </div>
               ) : t("exchange.connectExchangeApi")}
             </DialogTitle>
@@ -310,7 +308,7 @@ export default function ApiConnector({ connectedApis = [], onChange, className =
             ) : (
               <>
                 <div className="grid gap-4 py-4">
-                  <Alert variant="warning" className="mb-2">
+                  <Alert className="mb-2 border-yellow-300 bg-yellow-50 text-yellow-800">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>{t("exchange.apiSecurityWarning")}</AlertTitle>
                     <AlertDescription>
