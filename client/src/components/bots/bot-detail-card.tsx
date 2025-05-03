@@ -63,7 +63,16 @@ const strategies = [
 
 interface BotDetailCardProps {
   bot: Bot;
-  onLaunch: (botId: number, investment: number) => void;
+  onLaunch: (
+    botId: number, 
+    investment: number, 
+    options?: {
+      strategy?: string;
+      stopLossPercentage?: number | null;
+      takeProfitPercentage?: number | null;
+      maxDurationDays?: number | null;
+    }
+  ) => void;
 }
 
 export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
@@ -482,9 +491,23 @@ export function BotDetailCard({ bot, onLaunch }: BotDetailCardProps) {
                   
                   <div className="bg-muted/30 rounded-lg p-4">
                     <h4 className="text-sm font-medium mb-3"><T keyName="bots.advancedSettings" /></h4>
-                    <p className="text-sm text-neutral-500 mb-3">
-                      <T keyName="bots.availableAfterLaunch" />
-                    </p>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-neutral-600"><T keyName="bots.stopLoss" /></span>
+                        <span className="text-sm font-medium"><T keyName="bots.available" /></span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-neutral-600"><T keyName="bots.takeProfit" /></span>
+                        <span className="text-sm font-medium"><T keyName="bots.available" /></span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-neutral-600"><T keyName="bots.maxDuration" /></span>
+                        <span className="text-sm font-medium"><T keyName="bots.available" /></span>
+                      </div>
+                      <p className="text-xs text-neutral-500 mt-2">
+                        <T keyName="bots.availableAfterLaunch" />
+                      </p>
+                    </div>
                   </div>
                 </div>
               </TabsContent>

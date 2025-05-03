@@ -131,6 +131,14 @@ const defaultTranslations: Translations = {
     'bots.backToBots': 'Back to Bots',
     'bots.notFound': 'Bot Not Found',
     'bots.notFoundDescription': 'The bot you are looking for does not exist or has been removed',
+    'bots.useAdvancedSettings': 'Use advanced settings for more control',
+    'bots.stopLoss': 'Stop Loss',
+    'bots.stopLossDescription': 'Automatically stop the bot if the investment falls below this percentage of the initial value',
+    'bots.takeProfit': 'Take Profit',
+    'bots.takeProfitDescription': 'Automatically stop the bot when profit reaches this percentage of the initial investment',
+    'bots.maxDuration': 'Maximum Duration',
+    'bots.maxDurationDescription': 'Automatically stop the bot after this number of days',
+    'bots.days': 'days',
   },
   ru: {
     // Common
@@ -256,6 +264,14 @@ const defaultTranslations: Translations = {
     'bots.backToBots': 'Вернуться к ботам',
     'bots.notFound': 'Бот не найден',
     'bots.notFoundDescription': 'Бот, который вы ищете, не существует или был удален',
+    'bots.useAdvancedSettings': 'Использовать расширенные настройки для большего контроля',
+    'bots.stopLoss': 'Стоп-лосс',
+    'bots.stopLossDescription': 'Автоматически останавливать бота, если инвестиция упадет ниже указанного процента от начальной стоимости',
+    'bots.takeProfit': 'Тейк-профит',
+    'bots.takeProfitDescription': 'Автоматически останавливать бота, когда прибыль достигнет указанного процента от начальной инвестиции',
+    'bots.maxDuration': 'Максимальная длительность',
+    'bots.maxDurationDescription': 'Автоматически останавливать бота после указанного количества дней',
+    'bots.days': 'дней',
   }
 };
 
