@@ -78,9 +78,9 @@ export function setupBotRoutes(app: Express) {
   // Launch a bot
   app.post('/api/bots/launch', isAuthenticated, async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { botId, investment, currency } = req.body;
+      const { botId, initialInvestment, currency } = req.body;
       
-      if (!botId || !investment || !currency) {
+      if (!botId || !initialInvestment || !currency) {
         return res.status(400).json({ message: "Bot ID, investment amount, and currency are required" });
       }
       
@@ -107,13 +107,13 @@ export function setupBotRoutes(app: Express) {
       
       // Check if user has enough balance
       const wallet = await storage.getWalletByUserAndCurrency(req.user!.id, currency);
-      if (!wallet || wallet.balance < investment) {
+      if (!wallet || wallet.balance < initialInvestment) {
         return res.status(400).json({ message: "Insufficient balance" });
       }
       
       // Deduct investment from wallet
       await storage.updateWallet(wallet.id, { 
-        balance: wallet.balance - investment 
+        balance: wallet.balance - initialInvestment 
       });
       
       // Create user bot instance
@@ -121,7 +121,7 @@ export function setupBotRoutes(app: Express) {
         userId: req.user!.id,
         botId: parseInt(botId),
         status: "active",
-        investment,
+        investment: initialInvestment,
         currency,
         profit: 0,
       });
@@ -131,7 +131,7 @@ export function setupBotRoutes(app: Express) {
         userId: req.user!.id,
         type: "bot_investment",
         currency,
-        amount: investment,
+        amount: initialInvestment,
         status: "completed",
         txHash: `bot_${userBot.id}_${Date.now()}`,
       });

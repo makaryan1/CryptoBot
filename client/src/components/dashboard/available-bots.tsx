@@ -1,18 +1,83 @@
+import { useState } from "react";
 import { useBots } from "@/hooks/use-bots";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function AvailableBots() {
   const { availableBots, launchBot, isLoading } = useBots();
   
-  const handleLaunchBot = (botId: number) => {
-    // Show form to enter investment amount before launching
-    launchBot(botId, 1000); // Default value for now
+  const [selectedBot, setSelectedBot] = useState<number | null>(null);
+  const [investment, setInvestment] = useState(100);
+  const [showModal, setShowModal] = useState(false);
+  
+  const handleOpenModal = (botId: number) => {
+    setSelectedBot(botId);
+    setShowModal(true);
+  };
+  
+  const handleLaunchBot = () => {
+    if (selectedBot !== null) {
+      launchBot(selectedBot, investment);
+      setShowModal(false);
+    }
   };
   
   return (
     <section className="mb-8">
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Launch Bot</DialogTitle>
+            <DialogDescription>
+              Enter the amount you want to invest in this bot
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="investment" className="text-right">
+                Investment
+              </Label>
+              <Input
+                id="investment"
+                type="number"
+                min="10"
+                value={investment}
+                onChange={(e) => setInvestment(Number(e.target.value))}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="currency" className="text-right">
+                Currency
+              </Label>
+              <Input
+                id="currency"
+                value="USDT"
+                disabled
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleLaunchBot}>Launch</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold">Available Bots</h2>
         <div className="flex items-center">
@@ -73,7 +138,7 @@ export default function AvailableBots() {
                 
                 <button 
                   className="w-full py-2 bg-primary text-white rounded-md hover:bg-primary/90 font-medium"
-                  onClick={() => handleLaunchBot(bot.id)}
+                  onClick={() => handleOpenModal(bot.id)}
                 >
                   Launch Bot
                 </button>
