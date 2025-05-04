@@ -246,126 +246,152 @@ export default function ApiConnector({ className = "" }: ApiConnectorProps) {
       </Card>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>
+        <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-xl">
+          <DialogHeader className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-6 rounded-t-lg">
+            <DialogTitle className="text-xl font-bold">
               {selectedExchange ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   {getSelectedExchangeDetails()?.logo && (
                     <img 
                       src={getSelectedExchangeDetails()?.logo} 
-                      className="h-5 w-5" 
+                      className="h-8 w-8 bg-white p-1 rounded-full shadow-md" 
                       alt={getSelectedExchangeDetails()?.name} 
                     />
                   )}
                   {t("exchange.connectToExchange", { exchange: getSelectedExchangeDetails()?.name || "" })}
                 </div>
-              ) : t("exchange.connectExchangeApi")}
+              ) : (
+                <div className="flex items-center gap-3">
+                  <Sparkles className="h-7 w-7 text-yellow-300" />
+                  {t("exchange.connectExchangeApi")}
+                </div>
+              )}
             </DialogTitle>
-            <DialogDescription>
-              {t("exchange.connectApiDescription")}
+            <DialogDescription className="text-white/80 mt-2 text-base">
+              {selectedExchange 
+                ? t("exchange.connectApiDescription") 
+                : t("exchange.selectExchangeDescription")}
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit}>
             {!selectedExchange ? (
-              <div className="grid grid-cols-2 gap-3 py-4">
+              <div className="grid grid-cols-2 gap-4 p-6">
                 {SUPPORTED_EXCHANGES.map((exchange) => (
                   <Button
                     key={exchange.id}
                     variant="outline"
                     type="button"
-                    className="h-24 flex flex-col items-center justify-center gap-2 hover:bg-accent"
+                    className="h-28 flex flex-col items-center justify-center gap-3 hover:bg-accent transition-all duration-200 border-2 hover:border-primary/50 hover:shadow-md"
                     onClick={() => setSelectedExchange(exchange.id)}
                   >
                     {exchange.logo ? (
-                      <img src={exchange.logo} className="h-8 w-8" alt={exchange.name} />
+                      <img src={exchange.logo} className="h-12 w-12" alt={exchange.name} />
                     ) : (
-                      <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center">
-                        <Key className="h-4 w-4" />
+                      <div className="h-12 w-12 rounded-full bg-accent flex items-center justify-center">
+                        <Key className="h-6 w-6" />
                       </div>
                     )}
-                    <span>{exchange.name}</span>
+                    <span className="font-medium text-lg">{exchange.name}</span>
                   </Button>
                 ))}
               </div>
             ) : (
               <>
-                <div className="grid gap-4 py-4">
-                  <Alert className="mb-2 border-yellow-300 bg-yellow-50 text-yellow-800">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>{t("exchange.apiSecurityWarning")}</AlertTitle>
-                    <AlertDescription>
+                <div className="p-6 space-y-5">
+                  <Alert className="border-2 border-yellow-300 bg-yellow-50/70 dark:bg-yellow-900/10 shadow-sm">
+                    <AlertCircle className="h-5 w-5 text-yellow-600" />
+                    <AlertTitle className="text-yellow-800 font-medium text-base">{t("exchange.apiSecurityWarning")}</AlertTitle>
+                    <AlertDescription className="text-yellow-700">
                       {t("exchange.apiSecurityDescription")}
                     </AlertDescription>
                   </Alert>
 
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="apiKey" className="text-right">
-                      {t("exchange.apiKey")}
-                    </Label>
-                    <Input
-                      id="apiKey"
-                      name="apiKey"
-                      value={formData.apiKey}
-                      onChange={handleInputChange}
-                      className="col-span-3"
-                      placeholder="Enter your API key"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="apiSecret" className="text-right">
-                      {t("exchange.apiSecret")}
-                    </Label>
-                    <Input
-                      id="apiSecret"
-                      name="apiSecret"
-                      value={formData.apiSecret}
-                      onChange={handleInputChange}
-                      className="col-span-3"
-                      type="password"
-                      placeholder="Enter your API secret"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="description" className="text-right">
-                      {t("exchange.description")}
-                    </Label>
-                    <Input
-                      id="description"
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      className="col-span-3"
-                      placeholder="Optional description"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="testnetMode" className="text-right">
-                      {t("exchange.testnetMode")}
-                    </Label>
-                    <div className="col-span-3 flex items-center">
-                      <input
-                        id="testnetMode"
-                        name="testnetMode"
-                        type="checkbox"
-                        checked={formData.testnetMode}
-                        onChange={handleInputChange}
-                        className="mr-2 h-4 w-4 rounded border-gray-300"
-                      />
-                      <Label htmlFor="testnetMode" className="text-sm text-muted-foreground">
-                        {t("exchange.useTestnetDescription")}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="apiKey" className="text-right font-medium">
+                        {t("exchange.apiKey")}
                       </Label>
+                      <Input
+                        id="apiKey"
+                        name="apiKey"
+                        value={formData.apiKey}
+                        onChange={handleInputChange}
+                        className="col-span-3 h-11 px-4 font-mono text-sm"
+                        placeholder="Введите ваш API ключ"
+                      />
                     </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="apiSecret" className="text-right font-medium">
+                        {t("exchange.apiSecret")}
+                      </Label>
+                      <Input
+                        id="apiSecret"
+                        name="apiSecret"
+                        value={formData.apiSecret}
+                        onChange={handleInputChange}
+                        className="col-span-3 h-11 px-4 font-mono text-sm"
+                        type="password"
+                        placeholder="Введите ваш API секретный ключ"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="description" className="text-right font-medium">
+                        {t("exchange.description")}
+                      </Label>
+                      <Input
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        className="col-span-3 h-11"
+                        placeholder="Описание (необязательно)"
+                      />
+                    </div>
+                    
+                    {selectedExchange === 'binance' && (
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="testnetMode" className="text-right font-medium">
+                          {t("exchange.testnetMode")}
+                        </Label>
+                        <div className="col-span-3 flex items-center bg-blue-50 p-3 rounded-md border border-blue-100">
+                          <input
+                            id="testnetMode"
+                            name="testnetMode"
+                            type="checkbox"
+                            checked={formData.testnetMode}
+                            onChange={handleInputChange}
+                            className="mr-3 h-4 w-4 rounded"
+                          />
+                          <Label htmlFor="testnetMode" className="text-sm text-blue-700">
+                            {t("exchange.useTestnetDescription")}
+                          </Label>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedExchange === 'binance' && (
+                      <div className="mt-4 bg-blue-50 p-4 rounded-md border border-blue-100">
+                        <h4 className="text-sm font-medium text-blue-700 mb-2">Как получить API ключ Binance:</h4>
+                        <ol className="list-decimal list-inside space-y-1 text-sm text-blue-700">
+                          <li>Войдите в свой аккаунт Binance</li>
+                          <li>Перейдите в раздел "API Management"</li>
+                          <li>Создайте новый API ключ</li>
+                          <li>Разрешите доступ к чтению и торговле</li>
+                          <li>Скопируйте ключ и секрет</li>
+                        </ol>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                <DialogFooter className="flex justify-between">
+                <div className="p-5 border-t bg-gray-50 flex justify-between items-center">
                   <Button 
                     type="button" 
                     variant="outline"
                     onClick={handleTestConnection}
                     disabled={isTesting || !formData.apiKey || !formData.apiSecret}
+                    className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 font-medium"
                   >
                     {isTesting ? (
                       <>
@@ -381,18 +407,19 @@ export default function ApiConnector({ className = "" }: ApiConnectorProps) {
                       type="button" 
                       variant="secondary" 
                       onClick={() => { resetForm(); setIsDialogOpen(false); }}
-                      className="mr-2"
+                      className="mr-3"
                     >
                       {t("common.cancel")}
                     </Button>
                     <Button 
                       type="submit" 
                       disabled={isCreating || !formData.apiKey || !formData.apiSecret}
+                      className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium"
                     >
                       {isCreating ? t("common.saving") : t("common.save")}
                     </Button>
                   </div>
-                </DialogFooter>
+                </div>
               </>
             )}
           </form>
